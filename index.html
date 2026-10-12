@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="مجمع طلاب BIS منصة تعليمية متخصصة في علوم الحاسب والتقنية. تعلّم من الأساسيات إلى الاحتراف مع أفضل المدرسين.">
+    <meta name="keywords" content="تعلّم, مواد, برمجة, علوم حاسب, مجمع طلاب BIS">
+    <title>مجمع طلاب BIS</title>
+    <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar" id="navbar"></header>
+
+    <!-- Hero Section -->
+    <main class="page-content">
+        <section class="hero">
+            <div class="container">
+                <span class="hero-badge">🚀 منصة تعليمية متكاملة</span>
+                <h1>
+                    تعلّم بلا حدود مع<br>
+                    <span class="gradient-text">مجمع طلاب BIS</span>
+                </h1>
+                <p>مذاكرتك أسهل مع فيديوهات شرح وملخصات لكل محاضرة في مواد BIS.</p>
+                <div class="hero-buttons">
+                    <a href="courses.html" class="btn btn-cta btn-lg">استعرض المواد ←</a>
+                    <a href="about.html" class="btn btn-outline btn-lg">تعرّف علينا</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Courses -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>أحدث المواد</h2>
+                    <p>اختر مادتك وابدأ رحلة التعلّم</p>
+                    <div class="section-line"></div>
+                </div>
+                <div class="courses-grid" id="featuredCourses">
+                    <!-- Rendered by JS -->
+                </div>
+                <div class="text-center mt-xl">
+                    <a href="courses.html" class="btn btn-outline">عرض جميع المواد ←</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-box">
+                    <h2>جاهز تبدأ مذكرتك من هنا؟</h2>
+                    <p>تصفّح مواد الدفعة وابدأ من أول محاضرة، فالشرح والملخصات بانتظارك.</p>
+                    <a href="courses.html" class="btn btn-cta btn-lg">ابدأ الآن ←</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer"></footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Render homepage-specific content
+        document.addEventListener('DOMContentLoaded', () => {
+            // Stats
+            const statsGrid = document.getElementById('statsGrid');
+            if (statsGrid) {
+                statsGrid.innerHTML = `
+                    <div class="stat-card" data-animate="fadeInUp">
+                        <div class="stat-number">مواد الدفعة</div>
+                        <div class="stat-label">كلها في مكان واحد</div>
+                    </div>
+                    <div class="stat-card" data-animate="fadeInUp">
+                        <div class="stat-number">فيديو</div>
+                        <div class="stat-label">شرح لكل محاضرة</div>
+                    </div>
+                    <div class="stat-card" data-animate="fadeInUp">
+                        <div class="stat-number">250 طالب</div>
+                        <div class="stat-label stat-label-long">استفادوا من الكلاس روم السنة اللي فاتت. وفضل زمايل كتير برّاه، لأن الحد الأقصى للمقاعد كان 250. ومن هنا جت فكرة الموقع: مساحة تسع الكل.</div>
+                    </div>
+                    <div class="stat-card" data-animate="fadeInUp">
+                        <div class="stat-number">ملخص</div>
+                        <div class="stat-label">PDF لكل محاضرة</div>
+                    </div>
+                    <a href="contact.html" class="stat-card stat-card-link" data-animate="fadeInUp">
+                        <div class="stat-number">نذاكر مع بعض</div>
+                        <div class="stat-label">عندك ملخص؟ ضيفه معانا</div>
+                        <div class="stat-card-cta">تواصل معنا ←</div>
+                    </a>
+                    <a href="contact.html" class="stat-card stat-card-link" data-animate="fadeInUp">
+                        <div class="stat-number">اقترح</div>
+                        <div class="stat-label">مادة أو ملخص عايزه؟ قول</div>
+                        <div class="stat-card-cta">تواصل معنا ←</div>
+                    </a>
+                `;
+            }
+
+            // Featured Courses (show first 3)
+            const featured = document.getElementById('featuredCourses');
+            if (featured) {
+                featured.innerHTML = courses.slice(0, 3).map((course, index) => `
+                    <div class="course-card" data-animate="fadeInUp">
+                        <div class="course-card-image">
+                            ${getCourseImageHTML(course)}
+                            <span class="course-subject">${course.subject}</span>
+                        </div>
+                        <div class="course-card-body">
+                            <h3 class="course-card-title" style="margin-bottom: 2px;">${course.title}</h3>
+                            <p class="course-card-title-en" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: var(--space-sm); font-weight: 500;">${course.titleEn}</p>
+                            <p class="course-card-description">${course.description}</p>
+                            <div class="course-card-meta">
+                                <span class="meta-item">
+                                    <span class="meta-icon">📹</span>
+                                    ${course.lectures.length} محاضرات
+                                </span>
+                            </div>
+                            <div class="course-card-instructor">
+                                ${getInstructorImageHTML(course)}
+                                <span class="instructor-name">${course.creator}</span>
+                            </div>
+                        </div>
+                        <div class="course-card-footer">
+                            <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">ابدأ المادة ←</a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
+    <script type="module" src="js/guard.js"></script>
+</body>
+
+</html>

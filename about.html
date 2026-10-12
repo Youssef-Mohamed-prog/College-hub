@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجمع طلاب BIS</title>
+    <meta name="description" content="تعرّف على مجمع طلاب BIS رسالتنا، رؤيتنا، وفلسفة التعلّم.">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar" id="navbar"></header>
+
+    <!-- Page Content -->
+    <main class="page-content page-enter" id="aboutContent">
+        <!-- Rendered by JS below -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer"></footer>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('aboutContent');
+            if (!container) return;
+
+            container.innerHTML = `
+                <!-- About Hero -->
+                <section class="about-hero">
+                    <div class="container">
+                        <h1 class="animate-fade-in-up">${aboutContent.hero.title}</h1>
+                        <p class="animate-fade-in-up" style="animation-delay: 0.2s">${aboutContent.hero.subtitle}</p>
+                    </div>
+                </section>
+
+                <!-- About Sections -->
+                <section class="about-section">
+                    <div class="container">
+                        <!-- Mission -->
+                        <div class="about-block" data-animate="fadeInUp">
+                            <h2>${aboutContent.mission.title}</h2>
+                            <p>${aboutContent.mission.text}</p>
+                        </div>
+
+                        <!-- What We Offer -->
+                        <div class="about-block" data-animate="fadeInUp">
+                            <h2>${aboutContent.offering.title}</h2>
+                            <div class="about-offerings">
+                                ${aboutContent.offering.items.map(item => `
+                                    <div class="offering-card" data-animate="fadeInUp">
+                                        <div class="offering-icon">${item.icon}</div>
+                                        <h3>${item.title}</h3>
+                                        <p>${item.text}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Why -->
+                        <div class="about-block" data-animate="fadeInUp">
+                            <h2>${aboutContent.why.title}</h2>
+                            <p>${aboutContent.why.text}</p>
+                        </div>
+
+                        <!-- Philosophy -->
+                        <div class="about-block" data-animate="fadeInUp">
+                            <h2>${aboutContent.philosophy.title}</h2>
+                            <p>${aboutContent.philosophy.text}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA -->
+                <section class="cta-section">
+                    <div class="container">
+                        <div class="cta-box">
+                            <h2>ابدأ رحلتك التعليمية الآن</h2>
+                            <p>استكشف المواد المتاحة وابدأ التعلّم مع أفضل المدرسين.</p>
+                            <a href="courses.html" class="btn btn-cta btn-lg">استعرض المواد ←</a>
+                        </div>
+                    </div>
+                </section>
+            `;
+        });
+    </script>
+</body>
+
+</html>
