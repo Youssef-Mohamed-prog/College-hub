@@ -36,6 +36,7 @@ function renderNavbar() {
     ];
 
     navbar.innerHTML = `
+        <div class="mobile-overlay" id="mobileOverlay"></div>
         <div class="container">
             <a href="index.html" class="navbar-brand">
                 <img src="assets/icons/logo.svg" alt="شعار" style="width: 40px; height: 40px;">
@@ -48,6 +49,18 @@ function renderNavbar() {
                     <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 </button>
                 <nav class="navbar-nav" id="navbarNav">
+                    <div class="drawer-header">
+                        <a href="index.html" class="drawer-brand">
+                            <img src="assets/icons/logo.svg" alt="شعار" style="width: 32px; height: 32px;">
+                            <span>${siteConfig.name}</span>
+                        </a>
+                        <button type="button" class="drawer-close" id="drawerClose" aria-label="إغلاق القائمة">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
                 ${navLinks.map(link => `
                     <a href="${link.href}" class="${currentPage === link.page || (currentPage === '' && link.page === 'index.html') ? 'active' : ''}">${link.label}</a>
                 `).join('')}
@@ -59,7 +72,6 @@ function renderNavbar() {
             </button>
             </div>
         </div>
-        <div class="mobile-overlay" id="mobileOverlay"></div>
     `;
 }
 
@@ -144,20 +156,23 @@ function initNavbarScroll() {
         } else {
             navbar.classList.remove('scrolled');
         }
-    });
+    }, { passive: true });
 }
 
 /**
  * Mobile menu toggle
  */
 function initMobileMenu() {
+    const navbar = document.getElementById('navbar');
     const toggle = document.getElementById('navbarToggle');
     const nav = document.getElementById('navbarNav');
     const overlay = document.getElementById('mobileOverlay');
+    const drawerClose = document.getElementById('drawerClose');
 
     if (!toggle || !nav) return;
 
     function closeMenu() {
+        if (navbar) navbar.classList.remove('menu-open');
         toggle.classList.remove('active');
         nav.classList.remove('active');
         if (overlay) overlay.classList.remove('active');
@@ -165,6 +180,7 @@ function initMobileMenu() {
     }
 
     function openMenu() {
+        if (navbar) navbar.classList.add('menu-open');
         toggle.classList.add('active');
         nav.classList.add('active');
         if (overlay) overlay.classList.add('active');
@@ -179,6 +195,10 @@ function initMobileMenu() {
         }
     });
 
+    if (drawerClose) {
+        drawerClose.addEventListener('click', closeMenu);
+    }
+
     if (overlay) {
         overlay.addEventListener('click', closeMenu);
     }
@@ -190,8 +210,16 @@ function initMobileMenu() {
 
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeMenu();
+        if (e.key === 'Escape' && nav.classList.contains('active')) {
+            closeMenu();
+        }
     });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && nav.classList.contains('active')) {
+            closeMenu();
+        }
+    }, { passive: true });
 }
 
 /**

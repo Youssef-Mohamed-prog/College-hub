@@ -35,13 +35,16 @@ function renderLecturePage() {
     // Video section
     let videoHTML = '';
     if (lecture.video) {
-        // Extract YouTube video ID and create embed
+        // Extract YouTube video ID and create facade
         const videoId = extractYouTubeId(lecture.video);
         if (videoId) {
-            videoHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" 
-                          title="${lecture.title}" 
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                          allowfullscreen></iframe>`;
+            videoHTML = `
+                <div class="video-facade" style="position:relative;width:100%;height:100%;cursor:pointer;touch-action:manipulation;" data-videoid="${videoId}">
+                    <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" alt="${lecture.title}" style="width:100%;height:100%;object-fit:cover;">
+                    <button aria-label="تشغيل الفيديو" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:48px;background:rgba(0,0,0,.75);border:none;border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>`;
         } else {
             videoHTML = `<iframe src="${lecture.video}" title="${lecture.title}" allowfullscreen></iframe>`;
         }
@@ -186,6 +189,21 @@ function renderLecturePage() {
             </div>
         </div>
     `;
+
+    // Facade click → swap to real iframe
+    const facade = container.querySelector('.video-facade');
+    if (facade) {
+        facade.addEventListener('click', () => {
+            const vid = facade.dataset.videoid;
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0`;
+            iframe.title = lecture.title;
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.style.cssText = 'width:100%;height:100%;border:none;';
+            facade.replaceWith(iframe);
+        });
+    }
 }
 
 /**

@@ -243,8 +243,8 @@ input, textarea, select {
     left: 0;
     height: var(--navbar-height);
     background: var(--bg-navbar);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-subtle);
     z-index: 1000;
     transition: var(--transition);
@@ -528,8 +528,8 @@ input, textarea, select {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     transition: var(--transition);
 }
 
@@ -590,8 +590,8 @@ a.stat-card-link {
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     transition: var(--transition);
     display: flex;
     flex-direction: column;
@@ -628,8 +628,8 @@ a.stat-card-link {
     right: var(--space-md);
     padding: 4px 12px;
     background: var(--bg-overlay);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-full);
     font-size: 0.75rem;
@@ -1384,8 +1384,8 @@ a.stat-card-link {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-xl);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .contact-form-wrapper h2 {
