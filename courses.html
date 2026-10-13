@@ -7,7 +7,13 @@
     <title>مجمع طلاب BIS</title>
     <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
     <link rel="shortcut icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap">
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js">
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js">
+    <link rel="modulepreload" href="js/firebase.js">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -33,9 +39,9 @@
     <footer class="footer" id="footer"></footer>
 
     <!-- Scripts -->
-    <script src="js/data.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/courses.js"></script>
+    <script src="js/data.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/courses.js" defer></script>
     <script type="module" src="js/guard.js"></script>
 </body>
 </html>

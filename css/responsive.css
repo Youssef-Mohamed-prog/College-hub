@@ -357,8 +357,42 @@
         padding: var(--space-2xl) var(--space-lg);
     }
 
-    .cta-box h2 {
-        font-size: 1.6rem;
+    /* Mobile Performance Optimizations */
+    .stat-card,
+    .course-card,
+    .contact-form-wrapper {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: var(--bg-primary);
+    }
+
+    .course-subject {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: var(--bg-primary);
+    }
+
+    body::before,
+    body::after {
+        display: none;
+    }
+
+    .hero::before {
+        animation: none;
+    }
+
+    .course-hero-bg {
+        filter: blur(10px);
+    }
+}
+
+/* ---- Reduced Motion Preference ---- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
     }
 }
 
