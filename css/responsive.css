@@ -66,10 +66,108 @@
         padding: 0 var(--space-md);
     }
 
-    /* Navbar Mobile Drawer */
+    /* Header Layout & Height (Mobile) */
+    :root {
+        --navbar-height: 60px;
+    }
+
+    .navbar {
+        height: 60px;
+    }
+
     .navbar .container {
         position: static;
         z-index: auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: var(--space-sm);
+        min-width: 0;
+    }
+
+    /* Navbar Brand: Logo 36px & Name 17px on single row */
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: 17px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        flex-shrink: 1;
+        line-height: 1.2;
+    }
+
+    .navbar-brand img {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: var(--radius-sm);
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    /* Navbar Action Buttons Container */
+    .navbar .container > div {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm) !important;
+        flex-shrink: 0;
+    }
+
+    /* Logout Button on Mobile: 40x40px icon only */
+    #logoutBtn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0;
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-sm);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: transparent;
+        color: var(--text-primary);
+    }
+
+    #logoutBtn .logout-text {
+        display: none !important;
+    }
+
+    #logoutBtn .logout-icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    /* Dark Mode Toggle: min 40x40px touch target */
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    /* Hamburger Menu Toggle */
+    .navbar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0;
+        flex-shrink: 0;
     }
 
     .navbar.menu-open,
@@ -449,5 +547,26 @@
     .course-instructor-card {
         flex-direction: column;
         text-align: center;
+    }
+}
+
+/* ---- Ultra-Compact Mobile: max-width 380px ---- */
+@media (max-width: 380px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .navbar-brand {
+        font-size: 15px;
+        gap: 6px;
+    }
+
+    .navbar-brand img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .navbar .container > div {
+        gap: 6px !important;
     }
 }
