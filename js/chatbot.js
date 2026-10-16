@@ -44,6 +44,46 @@ function getBotCsvUrl() {
 // ------------------------------------------------------------
 const BOT_FALLBACK_QUESTIONS = [
     {
+        subject: "قواعد البيانات",
+        question: "ما هو تعريف قواعد البيانات؟",
+        answer: "قاعدة البيانات مجموعة منظمة من البيانات المترابطة."
+    },
+    {
+        subject: "محاسبة تكاليف",
+        question: "ما الفرق بين التكلفة الثابتة والتكلفة المتغيرة؟",
+        answer: "التكلفة الثابتة لا تتغير بتغير حجم النشاط، والمتغيرة تتغير بتغيره."
+    },
+    {
+        subject: "اقتصاد كلي",
+        question: "ما هو التضخم",
+        answer: "التضخم هو الارتفاع المستمر في المستوى العام للأسعار خلال فترة زمنية، وينتج عنه انخفاض القوة الشرائية للنقود."
+    },
+    {
+        subject: "قواعد البيانات",
+        question: "إيه الفرق بين المفتاح الأساسي والمفتاح الأجنبي؟",
+        answer: "المفتاح الأساسي بيحدد كل صف في الجدول بشكل فريد، ومينفعش يتكرر أو يبقى فاضي. المفتاح الأجنبي عمود في جدول بيشاور على المفتاح الأساسي في جدول تاني، عشان يربط الجدولين ببعض."
+    },
+    {
+        subject: "محاسبة ضرائب",
+        question: "الفرق بين الضريبة المباشرة والضريبة غير المباشرة؟",
+        answer: "الضريبة المباشرة بيدفعها الشخص أو الشركة من دخله أو أرباحه، ومبيقدرش ينقل عبأها لحد تاني، زي ضريبة الدخل وضريبة الأرباح التجارية. أما الضريبة غير المباشرة فبتتفرض على السلع والخدمات، والمستهلك هو اللي بيتحمل عبأها فعليًا لأنها بتتضاف على السعر، والبائع بيحصّلها ويوردها للدولة، زي ضريبة القيمة المضافة والضريبة الجمركية."
+    },
+    {
+        subject: "دراسات إدارة بالإنجليزية",
+        question: "What is SWOT analysis?",
+        answer: "SWOT analysis is a planning tool that helps an organization identify its internal Strengths and Weaknesses, and its external Opportunities and Threats, so it can make better strategic decisions."
+    },
+    {
+        subject: "دراسات إدارة بالإنجليزية",
+        question: "What is the difference between efficiency and effectiveness in management",
+        answer: "Efficiency means doing things right: using the fewest resources, such as time, money and effort, to get a task done. Effectiveness means doing the right things: choosing goals that matter and actually achieving them. A manager can be efficient but not effective, for example by completing the wrong task very quickly."
+    },
+    {
+        subject: "محاسبة تكاليف",
+        question: "ما هي نقطة التعادل وإزاي بتتحسب؟",
+        answer: "نقطة التعادل هي حجم المبيعات اللي عنده إجمالي الإيرادات يساوي إجمالي التكاليف، فمفيش ربح ولا خسارة. بتتحسب بالوحدات كده: التكاليف الثابتة مقسومة على (سعر بيع الوحدة ناقص التكلفة المتغيرة للوحدة). والفرق ده اسمه هامش المساهمة للوحدة."
+    },
+    {
         subject: "قواعد البيانات 2",
         question: "ما الفرق بين Transaction و Deadlock وكيف يتم معالجته في SQL Server؟",
         answer: "الـ Transaction هي وحدة عمل منطقية إما أن تُنفذ بالكامل (Commit) أو تُلغى بالكامل (Rollback) وفق خصائص ACID.\nأما الـ Deadlock فيحدث عندما تنتظر عمليتان أو أكثر موارد يقفلها الطرف الآخر، ويقوم الـ SQL Server تلقائياً بإنهاء إحدى العمليات (Deadlock Victim) لفك التعليق."
@@ -52,30 +92,11 @@ const BOT_FALLBACK_QUESTIONS = [
         subject: "إحصاء وحزم بحوث العمليات",
         question: "كيف نفرق بين استخدام اختبار T-Test وتحليل التباين ANOVA؟",
         answer: "نستخدم اختبار T-Test عند مقارنة متوسطين فقط (عينتين مستقلتين أو مرتبطتين)، بينما نستخدم ANOVA (Analysis of Variance) عندما نريد مقارنة متوسطات 3 مجموعات أو أكثر لتجنب زيادة خطأ من النوع الأول (Type I Error)."
-    },
-    {
-        subject: "دراسات إدارة بالإنجليزية",
-        question: "What is the key difference between Leadership and Management in modern organizations?",
-        answer: "Management focuses on planning, organizing, coordinating, and maintaining order and efficiency within current processes.\nLeadership focuses on inspiring, aligning people, creating a shared vision, and driving strategic change and innovation."
-    },
-    {
-        subject: "اقتصاد كلي",
-        question: "ما هو أثر رفع سعر الفائدة من قبل البنك المركزي على معدل التضخم والاستثمار؟",
-        answer: "رفع سعر الفائدة يقلل من المعروض النقدي ويزيد تكلفة الاقتراض، مما يؤدي إلى انخفاض الطلب الكلي وتباطؤ معدل التضخم. ولكن في المقابل، يؤدي ذلك إلى تراجع وتيرة الاستثمار وتكلفة تمويل المشروعات في المدى القصير."
-    },
-    {
-        subject: "محاسبة ضرائب",
-        question: "متى تعتبر المصروفات واجبة الخصم ضريبياً وفق قانون الضريبة على الدخل؟",
-        answer: "لكي يعتبر المصروف واجب الخصم يجب:\n1. أن يكون مرتبطاً بطبيعة نشاط المنشأة ولازماً لتحقيق الإيراد.\n2. أن يكون مصروفاً حقيقياً ومؤيداً بمستندات أو فواتير إلكترونية.\n3. أن يخص الفترة الضريبية نفسها (مبدأ الاستحقاق)."
-    },
-    {
-        subject: "محاسبة تكاليف",
-        question: "ما هي نقطة التعادل (Break-even Point) وكيف يتم حسابها بالوحدات وبالقيمة؟",
-        answer: "نقطة التعادل هي النقطة التي يتساوى عندها إجمالي الإيرادات مع إجمالي التكاليف (الربح = صفر).\n- بالوحدات = التكاليف الثابتة ÷ (سعر بيع الوحدة - التكلفة المتغيرة للوحدة).\n- بالقيمة (المبيعات) = التكاليف الثابتة ÷ نسبة هامش المساهمة."
     }
 ];
 
 
+// ------------------------------------------------------------
 // ------------------------------------------------------------
 // 🧠 الحالة العامة للبوت (Chatbot State)
 // ------------------------------------------------------------
@@ -84,7 +105,8 @@ const chatbotState = {
     hasWelcomed: false,      // هل تم إرسال رسالة الترحيب؟
     sheetQuestions: [],      // الأسئلة المحملة من Google Sheet
     coursesCatalog: [],      // فهرس المواد والمحاضرات المنشأ تلقائياً من data.js
-    isCsvLoading: true,      // هل جاري تحميل الشيت؟
+    isCsvLoading: false,     // هل جاري تحميل الشيت؟
+    csvLoadPromise: null,    // Promise للتحميل لضمان انتظار اكتمال الجلب قبل البحث
     csvFetchFailed: false,   // هل فشل تحميل الشيت؟
     isTyping: false          // هل البوت يكتب الآن؟
 };
@@ -94,17 +116,20 @@ const chatbotState = {
 // 🔤 كلمات الوصل والزوائد الشائعة في العربية (Stop Words)
 // يتم استبعادها للتركيز على الكلمات المفتاحية المهمة
 // ------------------------------------------------------------
-const ARABIC_STOP_WORDS = new Set([
-    "في", "من", "على", "إلى", "الى", "عن", "حتى", "مع", "بين",
-    "هو", "هي", "هما", "هم", "هن", "انا", "نحن", "انت", "انتم",
-    "هذا", "هذه", "هذان", "هاتان", "هؤلاء", "ذلك", "تلك", "هناك",
-    "ما", "ماذا", "هل", "كيف", "اين", "متى", "كم", "لماذا", "ليه", "ايه",
+const RAW_STOP_WORDS = [
+    "ما", "هي", "هو", "ايه", "يعني", "ازاي", "وازاي", "في", "من",
+    "على", "علي", "عن", "هل", "وهل", "و", "يا",
+    "اين", "متى", "كم", "لماذا", "ليه", "كيف", "وكيف",
     "الذي", "التي", "اللذين", "اللتين", "الذين", "اللاتي", "اللواتي", "اللي",
     "لو", "ان", "أن", "إن", "كان", "كانت", "يكون", "تكون",
     "عايز", "عاوز", "محتاج", "ممكن", "بدي", "لو_سمحت", "من_فضلك",
-    "يا", "و", "ثم", "أو", "او", "بل", "لكن", "لا", "لم", "لن", "ليس",
-    "كل", "بعض", "غير", "فقط", "بدون", "دا", "دي", "دول"
-]);
+    "ثم", "أو", "او", "بل", "لكن", "لا", "لم", "لن", "ليس",
+    "كل", "بعض", "غير", "فقط", "بدون", "دا", "ده", "دي", "دول",
+    // كلمات عامية مصرية شائعة في أسئلة الطلاب
+    "ازي", "وازي", "بقى", "كده", "عشان", "علشان",
+    "يلا", "طيب", "بتاع", "بتاعت", "بتاعه", "خالص", "اوي",
+    "تقدر", "نقدر", "عارف", "عارفه"
+];
 
 // خريطة تحويل الأرقام المكتوبة ككلمات إلى أرقام عددية
 const NUMBER_WORDS_MAP = {
@@ -126,11 +151,15 @@ const NUMBER_WORDS_MAP = {
 // ------------------------------------------------------------
 
 /**
- * تنظيف النص وتوحيد الحروف وإزالة علامات الترقيم والتشكيل
+ * تنظيف وتوحيد الحروف وإزالة علامات الترقيم والتشكيل
+ * - إزالة التشكيل وعلامات الترقيم (؟ ? ! ، ,)
+ * - توحيد أ إ آ إلى ا، ى إلى ي، ة إلى ه، ؤ/ئ إلى و/ي
+ * - تصغير الأحرف الإنجليزية
+ * - إزالة بادئة التعريف "ال" أو "وال" من بداية الكلمات (اختياري)
  */
-function cleanText(text) {
+function normalizeText(text, stripDefiniteArticle = true) {
     if (!text) return "";
-    return String(text)
+    let cleaned = String(text)
         // 1. إزالة التشكيل
         .replace(/[\u064B-\u065F\u0670]/g, "")
         // 2. توحيد الألف والهمزات والتاء والياء
@@ -139,21 +168,51 @@ function cleanText(text) {
         .replace(/ى/g, "ي")
         .replace(/ؤ/g, "و")
         .replace(/ئ/g, "ي")
-        // 3. إزالة علامات الترقيم والأقواس
-        .replace(/[!؟?.,،؛;:_()\[\]{}"'\\\/+\-*=<>#@$%^&~`|]/g, " ")
+        // 3. إزالة علامات الترقيم والأقواس (؟ ? ! ، , وغيرها)
+        .replace(/[؟?!،,.:_()\[\]{}"'\\\/+\-*=<>#@$%^&~`|;؛]/g, " ")
         // 4. حروف صغيرة ومسافات موحدة
         .toLowerCase()
         .replace(/\s+/g, " ")
         .trim();
+
+    if (stripDefiniteArticle) {
+        cleaned = cleaned
+            .split(" ")
+            .map(word => {
+                // إزالة أداة العطف والتعريف "وال" من بداية الكلمة (لو الباقي 3+ حروف)
+                if (word.startsWith("وال") && word.length > 4) {
+                    return word.slice(3);
+                }
+                // إزالة أداة التعريف "ال" من بداية الكلمة (لو الباقي 2+ حروف)
+                if (word.startsWith("ال") && word.length > 3) {
+                    return word.slice(2);
+                }
+                return word;
+            })
+            .join(" ");
+    }
+
+    return cleaned;
 }
 
 /**
+ * دالة مساعدة عامة لتنظيف النص بدون حذف "ال"
+ */
+function cleanText(text) {
+    return normalizeText(text, false);
+}
+
+// توحيد وتنظيف كلمات التوقف لتتطابق تماماً مع normalizeText
+const ARABIC_STOP_WORDS = new Set(RAW_STOP_WORDS.map(w => normalizeText(w, false)));
+
+/**
  * استخراج الكلمات المفتاحية من النص بعد استبعاد حروف الجر وكلمات الوصل
+ * وحذف زوائد التعريف "ال" و "وال" من البداية
  */
 function extractKeywords(text) {
-    const cleaned = cleanText(text);
-    if (!cleaned) return [];
-    return cleaned
+    const norm = normalizeText(text, true);
+    if (!norm) return [];
+    return norm
         .split(" ")
         .filter(word => word.length > 1 && !ARABIC_STOP_WORDS.has(word));
 }
@@ -211,77 +270,130 @@ function buildCoursesCatalog() {
 
 
 // ------------------------------------------------------------
-// 📑 المصدر 1: جلب بيانات Google Sheet CSV مرة واحدة
+// 📑 المصدر 1: جلب وتحليل بيانات Google Sheet CSV
 // ------------------------------------------------------------
 
 /**
- * محلل نصوص CSV خفيف ومضمون يعمل محلياً بدون أي مكتبات خارجية
- * يتعامل مع الفواصل، علامات التنصيص، والأسطر الجديدة داخل النصوص
+ * محلل نصوص CSV حقيقي متكامل ومضمون (RFC-4180)
+ * يتعامل مع الحقول المقتبسة، الفواصل والأسطر الجديدة داخل الاقتباس،
+ * الهروب بالعلامات المزدوجة ""، وبداية BOM، ونهايات CRLF.
+ * لا يستخدم split(",") نهائياً.
  */
-function parseCsvSafely(csvText) {
-    if (!csvText) return [];
+function parseCSV(text) {
+    if (!text) return [];
+    let str = String(text);
+    // إزالة علامة الـ BOM من بداية الملف إن وجدت
+    if (str.charCodeAt(0) === 0xFEFF) {
+        str = str.slice(1);
+    }
 
     const rows = [];
-    let currentRow = [];
-    let currentField = "";
-    let insideQuotes = false;
+    let row = [];
+    let field = "";
+    let inQuotes = false;
+    const len = str.length;
 
-    for (let i = 0; i < csvText.length; i++) {
-        const char = csvText[i];
-        const nextChar = csvText[i + 1];
-
-        if (char === '"') {
-            if (insideQuotes && nextChar === '"') {
-                currentField += '"';
-                i++; // تخطي علامة التنصيص المزدوجة
+    for (let i = 0; i < len; i++) {
+        const c = str[i];
+        if (inQuotes) {
+            if (c === '"') {
+                if (i + 1 < len && str[i + 1] === '"') {
+                    field += '"';
+                    i++; // تجاوز علامة التنصيص المهربة
+                } else {
+                    inQuotes = false;
+                }
             } else {
-                insideQuotes = !insideQuotes;
+                field += c;
             }
-        } else if (char === ',' && !insideQuotes) {
-            currentRow.push(currentField.trim());
-            currentField = "";
-        } else if ((char === '\r' || char === '\n') && !insideQuotes) {
-            if (char === '\r' && nextChar === '\n') i++;
-            currentRow.push(currentField.trim());
-            if (currentRow.some(field => field.length > 0)) {
-                rows.push(currentRow);
-            }
-            currentRow = [];
-            currentField = "";
         } else {
-            currentField += char;
+            if (c === '"') {
+                inQuotes = true;
+            } else if (c === ',') {
+                row.push(field);
+                field = "";
+            } else if (c === '\r' || c === '\n') {
+                if (c === '\r' && i + 1 < len && str[i + 1] === '\n') {
+                    i++; // تجاوز \n التالية لـ \r
+                }
+                row.push(field);
+                field = "";
+                if (row.some(f => f.trim().length > 0)) {
+                    rows.push(row);
+                }
+                row = [];
+            } else {
+                field += c;
+            }
         }
     }
 
-    if (currentField.length > 0 || currentRow.length > 0) {
-        currentRow.push(currentField.trim());
-        if (currentRow.some(field => field.length > 0)) {
-            rows.push(currentRow);
+    if (field.length > 0 || row.length > 0) {
+        row.push(field);
+        if (row.some(f => f.trim().length > 0)) {
+            rows.push(row);
         }
     }
 
-    if (rows.length < 2) return [];
+    return rows;
+}
+if (typeof window !== "undefined") {
+    window.parseCSV = parseCSV;
+}
 
-    // الصف الأول يحتوي على أسماء الأعمدة: المادة، السؤال، الإجابة
-    const headers = rows[0].map(h => cleanText(h));
+/**
+ * دالة تفكيك CSV مشتركة تدعم PapaParse لو متاح أو المحلل الداخلي parseCSV
+ */
+function parseCsvSafely(csvText) {
+    if (typeof Papa !== "undefined" && typeof Papa.parse === "function") {
+        const result = Papa.parse(csvText, { header: false, skipEmptyLines: "greedy" });
+        return result.data || [];
+    }
+    return parseCSV(csvText);
+}
+
+/**
+ * معالجة صفوف الـ CSV وتحويلها لكائنات منظمة
+ * الأعمدة: المادة، السؤال، الإجابة
+ * يتخطى صف العناوين وأي صف سؤاله أو إجابته فارغة
+ */
+function processRawCsvRows(rows) {
+    if (!Array.isArray(rows) || rows.length < 2) return [];
+
+    const headers = rows[0].map(h => normalizeText(h, false));
     const subjectIdx = headers.findIndex(h => h.includes("ماده") || h.includes("مادة"));
-    const questionIdx = headers.findIndex(h => h.includes("سؤال") || h.includes("السؤال"));
-    const answerIdx = headers.findIndex(h => h.includes("اجابه") || h.includes("إجابة") || h.includes("الاجابة") || h.includes("الإجابة"));
+    const questionIdx = headers.findIndex(h => h.includes("سؤال"));
+    const answerIdx = headers.findIndex(h => h.includes("اجابه") || h.includes("إجابة"));
+
+    const sCol = (subjectIdx !== -1) ? subjectIdx : 0;
+    const qCol = (questionIdx !== -1) ? questionIdx : 1;
+    const aCol = (answerIdx !== -1) ? answerIdx : 2;
 
     const parsedData = [];
     for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
-        const subject = (subjectIdx !== -1 && row[subjectIdx]) ? row[subjectIdx] : "عام";
-        const question = (questionIdx !== -1 && row[questionIdx]) ? row[questionIdx] : "";
-        const answer = (answerIdx !== -1 && row[answerIdx]) ? row[answerIdx] : "";
+        if (!row || row.length === 0) continue;
 
-        // شرط مهم: تجاهل الصفوف اللي إجابتها فاضية
-        if (question && answer && answer.trim().length > 0) {
+        let subject = (row[sCol] !== undefined && row[sCol] !== null) ? String(row[sCol]).trim() : "عام";
+        const question = (row[qCol] !== undefined && row[qCol] !== null) ? String(row[qCol]).trim() : "";
+        const answer = (row[aCol] !== undefined && row[aCol] !== null) ? String(row[aCol]).trim() : "";
+
+        // توحيد اسم المادة وفق الفورم
+        if (subject === "دراسات إدارية بالإنجليزية") {
+            subject = "دراسات إدارة بالإنجليزية";
+        }
+
+        // تخطي الصفوف الخالية من السؤال أو الإجابة
+        if (question && answer) {
             parsedData.push({
-                subject: subject.trim(),
-                question: question.trim(),
-                answer: answer.trim(),
+                subject: subject || "عام",
+                question,
+                answer,
+                normalizedQuestion: normalizeText(question, true),
+                normalizedAnswer: normalizeText(answer, true),
                 questionKeywords: extractKeywords(question),
+                answerKeywords: extractKeywords(answer),
+                allKeywords: extractKeywords(question + " " + answer),
                 subjectKeywords: extractKeywords(subject)
             });
         }
@@ -291,68 +403,110 @@ function parseCsvSafely(csvText) {
 }
 
 /**
- * جلب الـ CSV مرة واحدة عند تحميل الصفحة
+ * تحميل ومعالجة بيانات الأسئلة من Google Sheet مع إعادة المحاولة والانتظار
  */
-async function fetchSheetQuestions() {
+async function loadSheetQuestions(retryOnFail = true) {
+    if (chatbotState.sheetQuestions && chatbotState.sheetQuestions.length > 0) {
+        return chatbotState.sheetQuestions;
+    }
+
+    if (chatbotState.csvLoadPromise) {
+        return chatbotState.csvLoadPromise;
+    }
+
     chatbotState.isCsvLoading = true;
     chatbotState.csvFetchFailed = false;
 
-    const csvUrl = getBotCsvUrl();
-    const isPlaceholder = !csvUrl || csvUrl === "ضع_رابط_الشيت_CSV_هنا";
-
-    if (isPlaceholder) {
-        // استخدام الأسئلة النموذجية عند غياب الرابط
-        chatbotState.sheetQuestions = BOT_FALLBACK_QUESTIONS.map(q => ({
-            ...q,
-            questionKeywords: extractKeywords(q.question),
-            subjectKeywords: extractKeywords(q.subject)
-        }));
-        chatbotState.isCsvLoading = false;
-        return;
-    }
-
-    try {
-        const response = await fetch(csvUrl);
-        if (!response.ok) throw new Error("استجابة غير صحيحة من الشيت");
-        const csvText = await response.text();
-
-        // فك التشفير إما بـ PapaParse لو متاح أو بالمحلل الداخلي
-        let parsed = [];
-        if (typeof Papa !== "undefined") {
-            const result = Papa.parse(csvText, { header: true, skipEmptyLines: "greedy" });
-            const rawRows = result.data || [];
-            rawRows.forEach(row => {
-                const keys = Object.keys(row);
-                const sKey = keys.find(k => cleanText(k).includes("ماده") || cleanText(k).includes("مادة"));
-                const qKey = keys.find(k => cleanText(k).includes("سؤال"));
-                const aKey = keys.find(k => cleanText(k).includes("اجابه") || cleanText(k).includes("إجابة"));
-
-                const subject = (sKey && row[sKey]) ? String(row[sKey]).trim() : "عام";
-                const question = (qKey && row[qKey]) ? String(row[qKey]).trim() : "";
-                const answer = (aKey && row[aKey]) ? String(row[aKey]).trim() : "";
-
-                // تجاهل الصفوف الخالية من الإجابة
-                if (question && answer) {
-                    parsed.push({
-                        subject,
-                        question,
-                        answer,
-                        questionKeywords: extractKeywords(question),
-                        subjectKeywords: extractKeywords(subject)
-                    });
-                }
-            });
-        } else {
-            parsed = parseCsvSafely(csvText);
+    chatbotState.csvLoadPromise = (async () => {
+        // 1. فحص إذا كانت صفحة ask.html قد حملت الأسئلة بالفعل في state.allQuestions
+        if (typeof state !== "undefined" && state.allQuestions && state.allQuestions.length > 0) {
+            const fromPageState = state.allQuestions
+                .filter(q => q.question && q.answer && q.answer !== "لم تتم إضافة إجابة بعد.")
+                .map(q => ({
+                    subject: (q.subject === "دراسات إدارية بالإنجليزية") ? "دراسات إدارة بالإنجليزية" : (q.subject || "عام"),
+                    question: q.question.trim(),
+                    answer: q.answer.trim(),
+                    normalizedQuestion: normalizeText(q.question, true),
+                    normalizedAnswer: normalizeText(q.answer, true),
+                    questionKeywords: extractKeywords(q.question),
+                    answerKeywords: extractKeywords(q.answer),
+                    allKeywords: extractKeywords(q.question + " " + q.answer),
+                    subjectKeywords: extractKeywords(q.subject || "عام")
+                }));
+            if (fromPageState.length > 0) {
+                chatbotState.sheetQuestions = fromPageState;
+                chatbotState.isCsvLoading = false;
+                console.log(`[Chatbot] Loaded ${chatbotState.sheetQuestions.length} answered rows from page state. First row:`, chatbotState.sheetQuestions[0]);
+                return chatbotState.sheetQuestions;
+            }
         }
 
-        chatbotState.sheetQuestions = parsed;
-        chatbotState.isCsvLoading = false;
-    } catch (err) {
-        console.warn("تعذر جلب ملف الشيت CSV للشات بوت:", err);
+        const csvUrl = getBotCsvUrl();
+        const isPlaceholder = !csvUrl || csvUrl === "ضع_رابط_الشيت_CSV_هنا";
+
+        if (isPlaceholder) {
+            chatbotState.sheetQuestions = BOT_FALLBACK_QUESTIONS.map(q => ({
+                ...q,
+                normalizedQuestion: normalizeText(q.question, true),
+                normalizedAnswer: normalizeText(q.answer, true),
+                questionKeywords: extractKeywords(q.question),
+                answerKeywords: extractKeywords(q.answer),
+                allKeywords: extractKeywords(q.question + " " + q.answer),
+                subjectKeywords: extractKeywords(q.subject)
+            }));
+            chatbotState.isCsvLoading = false;
+            console.log(`[Chatbot] Loaded ${chatbotState.sheetQuestions.length} answered rows from fallback. First row:`, chatbotState.sheetQuestions[0]);
+            return chatbotState.sheetQuestions;
+        }
+
+        let lastErr = null;
+        for (let attempt = 1; attempt <= (retryOnFail ? 2 : 1); attempt++) {
+            try {
+                const response = await fetch(csvUrl, { cache: "no-cache" });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const csvText = await response.text();
+                const rawRows = parseCsvSafely(csvText);
+                const parsed = processRawCsvRows(rawRows);
+
+                if (parsed.length > 0) {
+                    chatbotState.sheetQuestions = parsed;
+                    chatbotState.isCsvLoading = false;
+                    chatbotState.csvFetchFailed = false;
+                    console.log(`[Chatbot] Loaded ${chatbotState.sheetQuestions.length} answered rows from CSV (attempt ${attempt}). First row:`, chatbotState.sheetQuestions[0]);
+                    return chatbotState.sheetQuestions;
+                }
+            } catch (err) {
+                lastErr = err;
+                console.warn(`[Chatbot] CSV fetch attempt ${attempt} failed:`, err);
+                if (attempt === 1 && retryOnFail) {
+                    await new Promise(r => setTimeout(r, 400));
+                }
+            }
+        }
+
+        // في حال فشل المحاولتين: استخدام البيانات الاحتياطية لضمان عمل البوت
+        console.warn("[Chatbot] CSV fetch failed after retries, using fallback data. Error:", lastErr);
         chatbotState.csvFetchFailed = true;
         chatbotState.isCsvLoading = false;
-    }
+        chatbotState.sheetQuestions = BOT_FALLBACK_QUESTIONS.map(q => ({
+            ...q,
+            normalizedQuestion: normalizeText(q.question, true),
+            normalizedAnswer: normalizeText(q.answer, true),
+            questionKeywords: extractKeywords(q.question),
+            answerKeywords: extractKeywords(q.answer),
+            allKeywords: extractKeywords(q.question + " " + q.answer),
+            subjectKeywords: extractKeywords(q.subject)
+        }));
+        console.log(`[Chatbot] Loaded ${chatbotState.sheetQuestions.length} answered rows from fallback. First row:`, chatbotState.sheetQuestions[0]);
+        return chatbotState.sheetQuestions;
+    })();
+
+    return chatbotState.csvLoadPromise;
+}
+
+// دالة متوافقة مع الكود القديم
+function fetchSheetQuestions() {
+    return loadSheetQuestions(true);
 }
 
 
@@ -431,62 +585,132 @@ function searchCatalogIntent(userQuery) {
 
 /**
  * فحص مطابقة السؤال العلمي مع أسئلة Google Sheet
+ * 1. فحص التطابق المباشر أو الاحتواء (Containment) بعد التوحيد (Rule 3)
+ * 2. احتساب النقاط بناءً على نسبة الكلمات المفتاحية (تطابق السؤال يُحسب ضعف الإجابة - Rule 4)
+ * 3. قبول التطابق إذا تحقق: نسبة >= 50% أو (استعلام من كلمتين أو أقل وتطابقت كلمة من 3+ أحرف)
+ * 4. تسجيل أعلى 3 نتائج للتصحيح عبر console.log (Rule 8)
  */
 function searchSheetQuestions(userQuery) {
-    if (chatbotState.sheetQuestions.length === 0) return { bestMatch: null, suggestions: [] };
+    if (!chatbotState.sheetQuestions || chatbotState.sheetQuestions.length === 0) {
+        return { bestMatch: null, suggestions: [] };
+    }
 
+    // 1. التطابق المباشر التام أو الاحتواء (Rule 3)
+    const normQuery = normalizeText(userQuery, true);
+    if (normQuery && normQuery.length >= 2) {
+        for (const item of chatbotState.sheetQuestions) {
+            const normQ = item.normalizedQuestion || normalizeText(item.question, true);
+            if (normQ && (normQ === normQuery || normQ.includes(normQuery) || normQuery.includes(normQ))) {
+                console.log(`[Chatbot Search] Direct match found for query "${userQuery}":`, item.question);
+                console.log("[Chatbot Search] Top 3 candidates:", [{
+                    rank: 1,
+                    question: item.question,
+                    subject: item.subject,
+                    score: "100%",
+                    keywordShare: "100%",
+                    matchType: "Direct Containment Match"
+                }]);
+                return {
+                    bestMatch: item,
+                    bestScore: 1.0,
+                    keywordShare: 1.0,
+                    suggestions: []
+                };
+            }
+        }
+    }
+
+    // 2. مطابقة الكلمات المفتاحية والأوزان (Rule 4)
     const userKeywords = extractKeywords(userQuery);
     if (userKeywords.length === 0) return { bestMatch: null, suggestions: [] };
 
     const scored = [];
 
     chatbotState.sheetQuestions.forEach((item) => {
-        const qWords = item.questionKeywords;
-        const sWords = item.subjectKeywords;
+        const qWords = item.questionKeywords || extractKeywords(item.question);
+        const aWords = item.answerKeywords || extractKeywords(item.answer);
+        const sWords = item.subjectKeywords || extractKeywords(item.subject);
 
-        // 1. حساب الكلمات المشتركة مع نص السؤال
         let matchCount = 0;
+        let has3LetterMatch = false;
+        let weightedPoints = 0;
+
         userKeywords.forEach(uWord => {
-            if (qWords.some(qWord => qWord === uWord || (qWord.length > 3 && (qWord.includes(uWord) || uWord.includes(qWord))))) {
+            const inQuestion = qWords.some(qw =>
+                qw === uWord || (qw.length >= 3 && uWord.length >= 3 && (qw.includes(uWord) || uWord.includes(qw)))
+            );
+            const inAnswer = aWords.some(aw =>
+                aw === uWord || (aw.length >= 3 && uWord.length >= 3 && (aw.includes(uWord) || uWord.includes(aw)))
+            );
+
+            if (inQuestion || inAnswer) {
                 matchCount++;
+                if (uWord.length >= 3) {
+                    has3LetterMatch = true;
+                }
+                if (inQuestion) {
+                    weightedPoints += 2; // السؤال يُحسب بضعف الوزن (count double)
+                } else {
+                    weightedPoints += 1; // الإجابة
+                }
             }
         });
 
         if (matchCount === 0) return;
 
-        // نسبة الكلمات المشتركة
-        let similarity = matchCount / Math.max(userKeywords.length, 1);
+        // نسبة الكلمات المفتاحية الموجودة في السؤال + الإجابة
+        const keywordShare = matchCount / userKeywords.length;
+        // النقاط الموزونة نسبة للحد الأقصى (كل الكلمات في السؤال = 2 * userKeywords.length)
+        let finalScore = weightedPoints / (2 * userKeywords.length);
 
-        // 2. إعطاء نقاط إضافية لو ذكر الطالب اسم المادة في سؤاله
+        // بونص ذكر اسم المادة في السؤال
         const mentionsSubject = userKeywords.some(uWord =>
-            sWords.some(sWord => sWord === uWord || (sWord.length > 3 && sWord.includes(uWord)))
+            sWords.some(sw => sw === uWord || (sw.length >= 3 && (sw.includes(uWord) || uWord.includes(sw))))
         );
         if (mentionsSubject) {
-            similarity += 0.25; // بونص ذكر المادة
+            finalScore += 0.1;
         }
 
         scored.push({
             item,
-            score: similarity
+            score: finalScore,
+            keywordShare,
+            matchCount,
+            has3LetterMatch
         });
     });
 
-    // الترتيب من الأعلى للأقل
     scored.sort((a, b) => b.score - a.score);
+
+    // تسجيل أعلى 3 نتائج للتصحيح (Rule 8)
+    console.log("[Chatbot Search] Query:", userQuery);
+    console.log("[Chatbot Search] Keywords:", userKeywords);
+    console.log("[Chatbot Search] Top 3 candidates:",
+        scored.slice(0, 3).map((s, idx) => ({
+            rank: idx + 1,
+            question: s.item.question,
+            subject: s.item.subject,
+            score: Math.round(s.score * 100) + "%",
+            share: Math.round(s.keywordShare * 100) + "%",
+            matches: s.matchCount + "/" + userKeywords.length
+        }))
+    );
 
     if (scored.length === 0) return { bestMatch: null, suggestions: [] };
 
     const top = scored[0];
-    const isAboveThreshold = top.score >= SIMILARITY_THRESHOLD;
+    const isAccepted =
+        top.keywordShare >= 0.50 ||
+        (userKeywords.length <= 2 && top.has3LetterMatch && top.matchCount >= 1);
 
-    // أقرب 2 أسئلة تالية كاقتراحات
     const suggestions = scored.slice(1, 3)
         .filter(s => s.score >= 0.15)
         .map(s => s.item);
 
     return {
-        bestMatch: isAboveThreshold ? top.item : null,
+        bestMatch: isAccepted ? top.item : null,
         bestScore: top.score,
+        keywordShare: top.keywordShare,
         suggestions
     };
 }
@@ -499,7 +723,7 @@ function searchSheetQuestions(userQuery) {
 /**
  * الدالة الرئيسية لتوليد رد البوت
  */
-function processUserMessage(userText) {
+async function processUserMessage(userText) {
     const trimmed = userText.trim();
     if (!trimmed) return;
 
@@ -509,47 +733,51 @@ function processUserMessage(userText) {
     // إظهار أنيميشن "جاري الكتابة..."
     showTypingIndicator();
 
-    setTimeout(() => {
-        hideTypingIndicator();
+    // التأكد من اكتمال تحميل وتحليل الـ CSV قبل تشغيل محرك البحث (Step 1)
+    try {
+        await loadSheetQuestions(true);
+    } catch (e) {
+        console.warn("[Chatbot] Error awaiting sheet questions load:", e);
+    }
 
-        // فحص حالة الخطأ في تحميل الشيت
-        if (chatbotState.csvFetchFailed && chatbotState.sheetQuestions.length === 0) {
-            appendMessage("في مشكلة مؤقتة، جرب بعد شوية", "bot");
-            return;
-        }
+    hideTypingIndicator();
 
-        // 2. فحص مصدري البحث:
-        // - المصدر 1: الشيت (أسئلة علمية)
-        const sheetResult = searchSheetQuestions(trimmed);
-        // - المصدر 2: data.js (محاضرات، ملخصات، كتب، سكاشن)
-        const catalogResult = searchCatalogIntent(trimmed);
+    // فحص حالة الخطأ
+    if (chatbotState.csvFetchFailed && chatbotState.sheetQuestions.length === 0) {
+        appendMessage("في مشكلة مؤقتة، جرب بعد شوية", "bot");
+        return;
+    }
 
-        const hasSheetMatch = Boolean(sheetResult.bestMatch);
-        const hasCatalogMatch = Boolean(catalogResult && catalogResult.course);
+    // 2. ترتيب البحث (Rule 5):
+    // أ) المصدر 1: الشيت (أسئلة علمية)
+    const sheetResult = searchSheetQuestions(trimmed);
+    // ب) المصدر 2: data.js (محاضرات، ملخصات، كتب، سكاشن)
+    const catalogResult = searchCatalogIntent(trimmed);
 
-        // لو الكلمات تنفع للمصدرين: اعرض إجابة الشيت الأول وبعدها لينكات المحاضرات المرتبطة
-        if (hasSheetMatch && hasCatalogMatch) {
-            appendSheetAnswer(sheetResult.bestMatch, sheetResult.suggestions);
-            appendCatalogResponse(catalogResult, "روابط ومحاضرات متعلقة بالمادة:");
-            return;
-        }
+    const hasSheetMatch = Boolean(sheetResult.bestMatch);
+    const hasCatalogMatch = Boolean(catalogResult && catalogResult.course);
 
-        // لو في تطابق مع أسئلة الشيت فقط
-        if (hasSheetMatch) {
-            appendSheetAnswer(sheetResult.bestMatch, sheetResult.suggestions);
-            return;
-        }
+    // لو الكلمات تنفع للمصدرين: اعرض إجابة الشيت الأول وبعدها لينكات المحاضرات المرتبطة
+    if (hasSheetMatch && hasCatalogMatch) {
+        appendSheetAnswer(sheetResult.bestMatch, sheetResult.suggestions);
+        appendCatalogResponse(catalogResult, "روابط ومحاضرات متعلقة بالمادة:");
+        return;
+    }
 
-        // لو الطلب خاص بالمحاضرات والملخصات والكتب
-        if (hasCatalogMatch) {
-            appendCatalogResponse(catalogResult);
-            return;
-        }
+    // لو في تطابق مع أسئلة الشيت فقط (Rule 6)
+    if (hasSheetMatch) {
+        appendSheetAnswer(sheetResult.bestMatch, sheetResult.suggestions);
+        return;
+    }
 
-        // لو مفيش أي تطابق في المصدرين: رد بـ "ملقيتش إجابة لسؤالك" مع زر "اسأل الدكتور"
-        appendNoMatchResponse(trimmed);
+    // لو الطلب خاص بالمحاضرات والملخصات والكتب
+    if (hasCatalogMatch) {
+        appendCatalogResponse(catalogResult);
+        return;
+    }
 
-    }, 380);
+    // لو مفيش أي تطابق: التوجيه لنموذج السؤال داخل الصفحة (Rule 7)
+    appendNoMatchResponse(trimmed);
 }
 
 /**
