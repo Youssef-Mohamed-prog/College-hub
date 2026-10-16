@@ -1761,3 +1761,276 @@ a.stat-card-link {
 .course-card:hover .course-card-image .gradient-bg {
     transform: scale(1.05);
 }
+
+/* ============================================================
+   👥 ستايلات نظام "اسأل زميلك" — Student Q&A Styles
+   ============================================================ */
+
+/* شارة "تجريبي" لكروت الأسئلة */
+.student-demo-badge {
+    background: rgba(245, 158, 11, 0.12) !important;
+    color: #D97706 !important;
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+}
+
+[data-theme="dark"] .student-demo-badge {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #FBBF24 !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+/* تنبيه صغير عائم (Toast Notification) */
+.student-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-accent);
+    box-shadow: var(--shadow-lg), 0 4px 20px rgba(79, 70, 229, 0.25);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    font-size: 0.95rem;
+    font-weight: 700;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.student-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* شارة صاحب الملخص تحت عنوان المحاضرة */
+.lecture-summary-by {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 12px 0;
+    padding: 6px 14px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-full);
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    transition: var(--transition-fast);
+}
+
+[data-theme="dark"] .lecture-summary-by {
+    background: rgba(99, 102, 241, 0.16);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #CBD5E1;
+}
+
+.lecture-summary-by strong {
+    color: var(--accent-1);
+    font-weight: 700;
+}
+
+.lecture-summary-by .summary-by-icon {
+    font-size: 1rem;
+}
+
+/* رسائل الحالة في قسم أسئلة الزملاء */
+.student-qa-msg {
+    transition: var(--transition);
+}
+
+.student-loading-spinner {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border-subtle);
+    border-top-color: var(--accent-1);
+    border-radius: 50%;
+    animation: student-spin 0.8s linear infinite;
+}
+
+@keyframes student-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================================
+   📝 صندوق طرح السؤال المضمن داخل الصفحة (Student Ask Box)
+   ============================================================ */
+.student-ask-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-top: var(--space-md);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: studentSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 640px;
+}
+
+[data-theme="dark"] .student-ask-panel {
+    border-color: rgba(99, 102, 241, 0.28);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes studentSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.student-ask-panel-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.student-ask-subject-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent-1);
+    background: rgba(99, 102, 241, 0.08);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    user-select: none;
+}
+
+[data-theme="dark"] .student-ask-subject-tag {
+    background: rgba(99, 102, 241, 0.16);
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+.student-ask-fallback-link {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    text-decoration: underline;
+    transition: var(--transition-fast);
+}
+
+.student-ask-fallback-link:hover {
+    color: var(--accent-1);
+}
+
+.student-ask-textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: var(--transition-fast);
+    box-sizing: border-box;
+}
+
+.student-ask-textarea:focus {
+    outline: none;
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.student-ask-textarea.has-error {
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.student-counter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: var(--space-sm);
+    min-height: 20px;
+}
+
+.student-field-error {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #DC2626;
+}
+
+[data-theme="dark"] .student-field-error {
+    color: #F87171;
+}
+
+.student-char-count {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-right: auto;
+    direction: ltr;
+}
+
+.student-ask-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.student-submit-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    filter: grayscale(0.2);
+}
+
+.student-alert-box {
+    margin-top: var(--space-sm);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.student-alert-box.success {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #047857;
+}
+
+[data-theme="dark"] .student-alert-box.success {
+    background: rgba(16, 185, 129, 0.18);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #34D399;
+}
+
+.student-alert-box.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #DC2626;
+}
+
+[data-theme="dark"] .student-alert-box.error {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #F87171;
+}
+
