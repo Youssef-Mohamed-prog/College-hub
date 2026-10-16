@@ -158,13 +158,13 @@ function renderCoursePage() {
                             </div>
                         </div>
 
-                        <!-- زر اسأل عن المادة دي تحت صف المحاضرات والمادة وقبل قائمة المحاضرات -->
+                        <!-- زر سؤال عام عن المادة تحت صف المحاضرات والمادة وقبل قائمة المحاضرات -->
                         <div class="course-ask-action" style="margin-top: var(--space-lg);">
                             <button type="button" class="btn btn-cta" id="askSubjectBtn" style="display: inline-flex; align-items: center; gap: 8px;">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                 </svg>
-                                <span>اسأل عن المادة دي</span>
+                                <span>سؤال عام عن المادة</span>
                             </button>
 
                             <!-- صندوق طرح السؤال داخل الصفحة -->
