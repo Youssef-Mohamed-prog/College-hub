@@ -149,11 +149,27 @@ function renderLecturePage() {
                     <!-- Title & Description -->
                     <div class="lecture-title-section">
                         <h1>${String(lecture.id).padStart(2, '0')} — ${lecture.title}</h1>
+                        ${lecture.summaryBy ? `
+                            <div class="lecture-summary-by">
+                                <span class="summary-by-icon">✍️</span>
+                                <span>الملخص بواسطة: <strong>${escapeHtml(lecture.summaryBy)}</strong></span>
+                            </div>
+                        ` : ''}
                         <p>${lecture.description}</p>
                     </div>
 
                     <!-- Download Buttons -->
                     ${actionsHTML}
+
+                    <!-- Student Question Button -->
+                    <div class="lecture-student-ask-wrapper" style="margin-top: var(--space-md); margin-bottom: var(--space-lg);">
+                        <button type="button" class="btn btn-outline btn-sm" id="askLectureQuestionBtn" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>عندك سؤال في المحاضرة دي؟</span>
+                        </button>
+                    </div>
 
                     <!-- Navigation -->
                     <div class="lecture-nav">
@@ -204,6 +220,65 @@ function renderLecturePage() {
             facade.replaceWith(iframe);
         });
     }
+
+    // زر "عندك سؤال في المحاضرة دي؟"
+    const askLectureBtn = container.querySelector('#askLectureQuestionBtn');
+    if (askLectureBtn) {
+        askLectureBtn.addEventListener('click', () => {
+            handleStudentAskClick(course.formSubject || course.title);
+        });
+    }
+}
+
+/**
+ * دالة فتح فورم "اسأل زميلك" أو إظهار رسالة النسخة التجريبية
+ */
+function handleStudentAskClick(formSubject) {
+    const studentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+    if (!studentFormUrl) {
+        showStudentToast("الفورم لسه مش متوصل (نسخة تجريبية)");
+        return;
+    }
+    const entryKey = (typeof STUDENT_FORM_ENTRY !== "undefined" ? STUDENT_FORM_ENTRY : (window.STUDENT_FORM_ENTRY || "")).trim();
+    let targetUrl = studentFormUrl;
+    if (entryKey && formSubject) {
+        const paramKey = entryKey.startsWith("entry.") ? entryKey : `entry.${entryKey}`;
+        const sep = targetUrl.includes("?") ? "&" : "?";
+        targetUrl = `${targetUrl}${sep}usp=pp_url&${paramKey}=${encodeURIComponent(formSubject)}`;
+    }
+    window.open(targetUrl, "_blank", "noopener,noreferrer");
+}
+
+/**
+ * إظهار رسالة صغيرة (Toast)
+ */
+function showStudentToast(message) {
+    let toast = document.getElementById('studentToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'studentToast';
+        toast.className = 'student-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    if (toast._hideTimeout) clearTimeout(toast._hideTimeout);
+    toast._hideTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3500);
+}
+
+/**
+ * دالة تنظيف وتأمين النصوص المعروضة
+ */
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 /**
@@ -230,3 +305,4 @@ function handleDownload(event, filePath) {
     // If the file doesn't exist, the browser will handle the 404
     console.log(`Downloading: ${filePath}`);
 }
+

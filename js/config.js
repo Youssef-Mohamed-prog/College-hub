@@ -25,10 +25,21 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTWPgwzdUmYecMG
 const ENTRY_SUBJECT = "entry.1540295220";
 const ENTRY_QUESTION = "entry.932564472";
 
+// ============================================================
+// 👥 إعدادات "اسأل زميلك" — Ask Your Colleague Configuration
+// ثوابت منفصلة خاصة بنظام أسئلة وإجابات الطلاب
+// ============================================================
+const STUDENT_FORM_URL = "";
+const STUDENT_CSV_URL = "";
+const STUDENT_FORM_ENTRY = "";
+
 // إتاحة الروابط والثوابت في النطاق العام (window) لضمان وصول كل الملفات إليها
 if (typeof window !== "undefined") {
     window.FORM_URL = FORM_URL;
     window.CSV_URL = CSV_URL;
     window.ENTRY_SUBJECT = ENTRY_SUBJECT;
     window.ENTRY_QUESTION = ENTRY_QUESTION;
+    window.STUDENT_FORM_URL = STUDENT_FORM_URL;
+    window.STUDENT_CSV_URL = STUDENT_CSV_URL;
+    window.STUDENT_FORM_ENTRY = STUDENT_FORM_ENTRY;
 }
