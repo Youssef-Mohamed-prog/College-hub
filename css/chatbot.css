@@ -1,0 +1,591 @@
+/* ============================================================
+   🤖 مساعد طلاب BIS — Chatbot Styles
+   متوافق مع التصميم العام للموقع، الوضع الليلي، والمتجاوب مع الموبايل
+   ============================================================ */
+
+/* -----------------------------------------
+   1. الزرار العايم تحت يسار الشاشة (Floating Toggle Button)
+   ----------------------------------------- */
+#bisChatbotToggle {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4), var(--shadow-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#bisChatbotToggle:hover {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+}
+
+#bisChatbotToggle:active {
+    transform: scale(0.96);
+}
+
+/* أيقونة الشات وأيقونة الإغلاق داخل الزر */
+#bisChatbotToggle .chatbot-icon-open,
+#bisChatbotToggle .chatbot-icon-close {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, opacity 0.25s ease;
+}
+
+#bisChatbotToggle .chatbot-icon-open {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+#bisChatbotToggle .chatbot-icon-close {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+#bisChatbotToggle.active .chatbot-icon-open {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+#bisChatbotToggle.active .chatbot-icon-close {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* نبض مضيء حول الزر للفت الانتباه */
+#bisChatbotToggle::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-1);
+    opacity: 0;
+    animation: chatbotPulse 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes chatbotPulse {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(0.95); opacity: 0; }
+}
+
+/* تلميح / بالونة مساعدة تظهر فوق الزر */
+#bisChatbotHint {
+    position: fixed;
+    bottom: 92px;
+    left: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: fadeInDown 0.5s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    white-space: nowrap;
+}
+
+#bisChatbotHint.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+}
+
+#bisChatbotHint::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 24px;
+    width: 10px;
+    height: 10px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-accent);
+    border-bottom: 1px solid var(--border-accent);
+    transform: rotate(45deg);
+}
+
+/* -----------------------------------------
+   2. نافذة الشات (Chatbot Window)
+   ----------------------------------------- */
+#bisChatbotWindow {
+    position: fixed;
+    bottom: 96px;
+    left: 24px;
+    width: 390px;
+    max-width: calc(100vw - 32px);
+    height: 580px;
+    max-height: calc(100vh - 120px);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), var(--shadow-glow);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+    direction: rtl;
+    font-family: 'Cairo', sans-serif;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+#bisChatbotWindow.open {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+/* ترويسة نافذة الشات */
+.chatbot-header {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-header-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chatbot-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.chatbot-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: #10B981;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+.chatbot-header-text h3 {
+    font-size: 0.98rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+    color: #ffffff;
+}
+
+.chatbot-header-text span {
+    font-size: 0.78rem;
+    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.chatbot-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chatbot-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.chatbot-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.08);
+}
+
+/* -----------------------------------------
+   3. منطقة الرسائل (Messages Scroll Area)
+   ----------------------------------------- */
+.chatbot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+    background: var(--bg-base);
+}
+
+.chatbot-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 4px;
+}
+
+/* فقاعة الرسالة المشتركة */
+.chatbot-msg {
+    display: flex;
+    flex-direction: column;
+    animation: fadeInUp 0.25s ease;
+    word-break: break-word;
+}
+
+/* رسالة الطالب (يمين الشاشة) */
+.chatbot-msg.user {
+    align-self: flex-start; /* في الـ RTL flex-start يعني جهة اليمين */
+    max-width: 82%;
+}
+
+.chatbot-msg.user .chatbot-bubble {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    border-radius: 18px 18px 4px 18px;
+    padding: 10px 15px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.6;
+    box-shadow: 0 2px 10px rgba(79, 70, 229, 0.2);
+}
+
+/* رسالة البوت (شمال الشاشة) */
+.chatbot-msg.bot {
+    align-self: flex-end; /* في الـ RTL flex-end يعني جهة اليسار */
+    max-width: 90%;
+}
+
+.chatbot-msg.bot .chatbot-bubble {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 18px 18px 18px 4px;
+    padding: 12px 15px;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    box-shadow: var(--shadow-sm);
+}
+
+/* نصوص الإجابة داخل الفقاعة */
+.chatbot-bubble-text {
+    white-space: pre-line;
+}
+
+.chatbot-bubble-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--accent-1);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    align-self: flex-start;
+}
+
+/* أمثلة الأسئلة المقترحة (Chips) */
+.chatbot-chips-title {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin: 8px 0 4px;
+}
+
+.chatbot-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.chatbot-chip-btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-accent);
+    color: var(--accent-1);
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    font-size: 0.84rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chatbot-chip-btn:hover {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.chatbot-chip-btn .chip-icon {
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* أزرار تحميل المحاضرات والملخصات والكتب */
+.chatbot-resources {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.chatbot-resource-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.chatbot-resource-btn:hover {
+    border-color: var(--accent-1);
+    background: rgba(99, 102, 241, 0.08);
+    color: var(--accent-1);
+    transform: translateY(-1px);
+}
+
+.chatbot-resource-btn .res-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* زر "اسأل الدكتور" عند عدم وجود تطابق */
+.chatbot-ask-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px 16px;
+    background: var(--cta-gradient);
+    color: #ffffff !important;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: var(--shadow-glow-cta);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chatbot-ask-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* أنيميشن كتابة البوت (Typing Indicator) */
+.chatbot-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px 18px 18px 4px;
+    align-self: flex-end; /* جهة اليسار مثل البوت */
+}
+
+.chatbot-typing-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--accent-1);
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.chatbot-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.chatbot-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+.chatbot-typing-dot:nth-child(3) { animation-delay: 0; }
+
+@keyframes typingBounce {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* -----------------------------------------
+   4. صندوق الكتابة والإرسال (Chatbot Footer)
+   ----------------------------------------- */
+.chatbot-footer {
+    padding: 12px 14px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.chatbot-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.chatbot-input {
+    flex: 1;
+    height: 44px;
+    padding: 0 16px;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    font-family: inherit;
+    direction: rtl;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.chatbot-input::placeholder {
+    color: var(--text-muted);
+}
+
+.chatbot-input:focus {
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    background: var(--bg-primary);
+}
+
+.chatbot-send-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.chatbot-send-btn:hover {
+    transform: scale(1.08);
+}
+
+.chatbot-send-btn:active {
+    transform: scale(0.95);
+}
+
+.chatbot-send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* -----------------------------------------
+   5. التجاوب مع الموبايل (Mobile Responsive)
+   ----------------------------------------- */
+@media (max-width: 768px) {
+    #bisChatbotToggle {
+        bottom: 18px;
+        left: 18px;
+        width: 54px;
+        height: 54px;
+    }
+
+    #bisChatbotHint {
+        bottom: 80px;
+        left: 18px;
+        font-size: 0.78rem;
+    }
+
+    #bisChatbotWindow {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 85vh;
+        height: 85dvh;
+        max-height: 85vh;
+        max-height: 85dvh;
+        border-radius: 24px 24px 0 0;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+
+    .chatbot-header {
+        border-radius: 24px 24px 0 0;
+        padding: 12px 16px;
+    }
+
+    .chatbot-messages {
+        padding: 14px 12px;
+    }
+
+    .chatbot-msg.user {
+        max-width: 88%;
+    }
+
+    .chatbot-msg.bot {
+        max-width: 95%;
+    }
+
+    .chatbot-footer {
+        padding: 10px 12px;
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+    }
+}

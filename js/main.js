@@ -31,6 +31,7 @@ function renderNavbar() {
     const navLinks = [
         { href: 'index.html', label: 'الرئيسية', page: 'index.html' },
         { href: 'courses.html', label: 'المواد', page: 'courses.html' },
+        { href: 'ask.html', label: 'اسأل الدكتور', page: 'ask.html' },
         { href: 'about.html', label: 'من نحن', page: 'about.html' },
         { href: 'contact.html', label: 'تواصل معنا', page: 'contact.html' }
     ];
@@ -104,6 +105,7 @@ function renderFooter() {
                     <ul>
                         <li><a href="index.html">الرئيسية</a></li>
                         <li><a href="courses.html">المواد</a></li>
+                        <li><a href="ask.html">اسأل الدكتور</a></li>
                         <li><a href="about.html">من نحن</a></li>
                         <li><a href="contact.html">تواصل معنا</a></li>
                     </ul>

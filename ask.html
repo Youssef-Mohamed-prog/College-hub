@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجمع طلاب BIS</title>
+    <meta name="description"
+        content="منصة تعليمية لطلاب نظم المعلومات الإدارية (BIS): اسأل الدكتور واستعرض بنك الأسئلة والإجابات الأكاديمية لكل المواد في مكان واحد.">
+    <meta property="og:description"
+        content="منصة تعليمية لطلاب نظم المعلومات الإدارية (BIS): اسأل الدكتور واستعرض بنك الأسئلة والإجابات الأكاديمية لكل المواد في مكان واحد.">
+    <meta name="twitter:description"
+        content="منصة تعليمية لطلاب نظم المعلومات الإدارية (BIS): اسأل الدكتور واستعرض بنك الأسئلة والإجابات الأكاديمية لكل المواد في مكان واحد.">
+    <meta name="keywords" content="اسأل الدكتور, بنك الأسئلة, BIS, استفسارات أكاديمية, حلول, نظم المعلومات الإدارية">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="theme-color" content="#4F46E5">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap">
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/ask.css">
+    <link rel="stylesheet" href="css/chatbot.css">
+</head>
+
+<body>
+    <!-- Navbar (Rendered dynamically by main.js) -->
+    <header class="navbar" id="navbar"></header>
+
+    <!-- Page Content -->
+    <main class="page-content page-enter">
+        <div class="container">
+            <!-- 1. ترويسة الصفحة وزر اسأل سؤالك -->
+            <section class="ask-hero">
+                <span class="hero-badge animate-fade-in-up">💬 بنك الأسئلة والاستفسارات الأكاديمية</span>
+                <h1 class="animate-fade-in-up" style="animation-delay: 0.1s;">
+                    اسأل <span class="gradient-text">الدكتور</span>
+                </h1>
+                <p class="ask-subtitle animate-fade-in-up" style="animation-delay: 0.2s;">
+                    اطرح استفساراتك حول مقررات ومحاضرات الدفعة، وتابع إجابات الدكاترة والمعيدين المنشورة أولاً بأول لتعم الفائدة على الجميع.
+                </p>
+                <!-- شريط التنبيه للبيانات التجريبية -->
+                <div class="ask-notice-banner" id="demoNoticeBanner" style="display: none;">
+                    <div class="notice-icon">💡</div>
+                    <div class="notice-content">
+                        <strong>وضع المعاينة:</strong> يتم الآن عرض أسئلة نموذجية للتوضيح. بمجرد وضع رابط Google Sheet الفعلي في ملف <code>js/config.js</code> ستظهر أسئلتك الحقيقية تلقائياً.
+                    </div>
+                </div>
+            </section>
+
+            <!-- كارت نموذج طرح سؤال جديد (في نفس الصفحة) -->
+            <section class="ask-form-card animate-fade-in-up" id="ask-form" style="animation-delay: 0.3s;">
+                <div class="ask-form-header">
+                    <div class="ask-form-title-group">
+                        <span class="ask-form-icon" aria-hidden="true">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <h2 class="ask-form-title">اطرح سؤالك الأكاديمي</h2>
+                            <p class="ask-form-desc">اختر المقرر الدراسي واكتب استفسارك ليتم إرساله للدكتور والرد عليه.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="askQuestionForm" class="ask-form-inner" novalidate>
+                    <!-- اختيار المادة -->
+                    <div class="ask-field-group">
+                        <label for="subjectSelect" class="ask-field-label">
+                            المقرر الدراسي <span class="required-star">*</span>
+                        </label>
+                        <div class="ask-select-wrapper">
+                            <select id="subjectSelect" class="ask-field-select" required aria-describedby="subjectError">
+                                <option value="" disabled selected>اختار المادة</option>
+                                <option value="قواعد البيانات">قواعد البيانات</option>
+                                <option value="إحصاء وحزم بحوث العمليات">إحصاء وحزم بحوث العمليات</option>
+                                <option value="دراسات إدارة بالإنجليزية">دراسات إدارة بالإنجليزية</option>
+                                <option value="اقتصاد كلي">اقتصاد كلي</option>
+                                <option value="محاسبة ضرائب">محاسبة ضرائب</option>
+                                <option value="محاسبة تكاليف">محاسبة تكاليف</option>
+                            </select>
+                            <span class="ask-select-arrow" aria-hidden="true">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="subjectError" class="ask-field-error" role="alert" aria-live="polite"></div>
+                    </div>
+
+                    <!-- نص السؤال -->
+                    <div class="ask-field-group">
+                        <div class="ask-field-header-row">
+                            <label for="questionInput" class="ask-field-label">
+                                نص السؤال <span class="required-star">*</span>
+                            </label>
+                            <span class="ask-char-count" id="charCounter">0 / 1000</span>
+                        </div>
+                        <textarea id="questionInput" class="ask-field-textarea" placeholder="اكتب سؤالك هنا" rows="4" maxlength="1000" required aria-describedby="questionError"></textarea>
+                        <div id="questionError" class="ask-field-error" role="alert" aria-live="polite"></div>
+                    </div>
+
+                    <!-- زر الإرسال -->
+                    <div class="ask-form-actions">
+                        <button type="submit" id="submitQuestionBtn" class="btn btn-cta ask-submit-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                            <span id="submitBtnText">إرسال السؤال</span>
+                        </button>
+                    </div>
+
+                    <!-- رسالة التنبيه (نجاح أو خطأ) -->
+                    <div id="formAlertBox" class="ask-form-alert" style="display: none;" role="status" aria-live="polite"></div>
+                </form>
+            </section>
+
+            <!-- 2. شريط البحث والفلترة -->
+            <section class="ask-toolbar animate-fade-in-up" style="animation-delay: 0.4s;">
+                <!-- خانة البحث -->
+                <div class="ask-search-wrapper">
+                    <span class="ask-search-icon" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                    <input type="text" id="searchInput" class="ask-search-input" placeholder="ابحث في نص السؤال أو الإجابة..." aria-label="ابحث في نص السؤال أو الإجابة">
+                    <button type="button" id="searchClear" class="ask-search-clear" aria-label="مسح البحث" title="مسح">✕</button>
+                </div>
+
+                <!-- فلاتر المواد (الكل + المواد الستة) -->
+                <div class="ask-filters-section">
+                    <div class="ask-filters-header">
+                        <span>تصفية حسب المقرر:</span>
+                    </div>
+                    <div class="ask-filters-scroll" id="filterChips" role="toolbar" aria-label="فلاتر المواد الدراسية">
+                        <!-- يُبنى تلقائياً بواسطة js/ask.js -->
+                    </div>
+                </div>
+
+                <!-- شريط حالة النتائج والأكشنز -->
+                <div class="ask-results-meta">
+                    <span id="resultsCount" class="ask-count-badge">جاري التحميل...</span>
+                    <div class="ask-actions-group">
+                        <button type="button" id="expandAllBtn" class="ask-action-link" title="فتح جميع الإجابات">
+                            <span>فتح الكل</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <span style="color: var(--border-light);">|</span>
+                        <button type="button" id="collapseAllBtn" class="ask-action-link" title="إغلاق جميع الإجابات">
+                            <span>طي الكل</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. قائمة الأسئلة والإجابات (الأكورديون) -->
+            <section id="questionsContainer" aria-live="polite">
+                <!-- يُعرض هنا إما كروت الأسئلة، أو جاري التحميل، أو فشل التحميل، أو لا توجد أسئلة -->
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer (Rendered dynamically by main.js) -->
+    <footer class="footer" id="footer"></footer>
+
+    <!-- Scripts -->
+    <script src="js/config.js" defer></script>
+    <script src="js/data.js" defer></script>
+    <!-- مكتبة PapaParse لمعالجة ملفات CSV بدقة تامة وبدون باك إند -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/ask.js" defer></script>
+    <script src="js/chatbot.js" defer></script>
+</body>
+
+</html>
