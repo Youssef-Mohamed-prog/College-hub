@@ -29,10 +29,10 @@ const ENTRY_QUESTION = "entry.932564472";
 // 👥 إعدادات "اسأل زميلك" — Ask Your Colleague Configuration
 // ثوابت منفصلة خاصة بنظام أسئلة وإجابات الطلاب
 // ============================================================
-const STUDENT_FORM_URL = "";
-const STUDENT_CSV_URL = "";
-const STUDENT_FORM_ENTRY_SUBJECT = "";
-const STUDENT_FORM_ENTRY_QUESTION = "";
+const STUDENT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdIIXiks6SOB4vPidFpHoicKakBhfUWtUwJZGQXOGX1ymeGTw/viewform";
+const STUDENT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKMg53WPGwBcquZmGAetNmjIwRPiPpS8120PrvIWX0_T5Lo180oQ4BcCW0OgSCtRoVGvjjas3t1Pys/pub?gid=1193762460&single=true&output=csv";
+const STUDENT_FORM_ENTRY_SUBJECT = "entry.1349988251";
+const STUDENT_FORM_ENTRY_QUESTION = "entry.1862128244";
 
 // إتاحة الروابط والثوابت في النطاق العام (window) لضمان وصول كل الملفات إليها
 if (typeof window !== "undefined") {
