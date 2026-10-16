@@ -6,98 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCoursePage();
 });
 
-// ============================================================
-// ⚠️ احذف هذه الكتلة بالكامل قبل النشر الفعلي ⚠️
-// DEMO_STUDENT_QA — بيانات تجريبية لأسئلة الزملاء لكل مادة
-// تُعرض فقط عندما يكون STUDENT_CSV_URL فارغاً
-// ============================================================
-const DEMO_STUDENT_QA = {
-    "قواعد البيانات": [
-        {
-            question: "ازاي أعمل Foreign Key في SQL بدون ما يحصل خطأ في العلاقات؟",
-            answer: "لازم الجدول المرجعي (الأساسي) يكون العمود فيه Primary Key أو Unique، ونوع البيانات والطول يكونوا متطابقين تماماً في الجدولين."
-        },
-        {
-            question: "إيه الفرق العملي بين Left Join و Inner Join؟",
-            answer: "الـ Inner Join بيرجع السجلات المشتركة فقط بين الجدولين، بينما Left Join بيرجع كل سجلات الجدول الأيسر حتى لو مفيش مقابل ليها في الجدول التاني (بتظهر بـ NULL)."
-        },
-        {
-            question: "هل لازم كل جدول في قاعدة البيانات يكون فيه Primary Key؟",
-            answer: "نظرياً وتطبيقياً في التصميم السليم نعم، لتحديد كل صف بشكل فريد وضمان سرعة الفهرسة وصحة العلاقات وعدم تكرار البيانات."
-        }
-    ],
-    "إحصاء وحزم بحوث العمليات": [
-        {
-            question: "إمتى نستخدم نموذج النقل Transportation Model ونموذج التعيين Assignment Model؟",
-            answer: "نموذج النقل يُستخدم لتوزيع كميات من عدة مصادر لعدة مراكز طلب بأقل تكلفة، بينما نموذج التعيين حالة خاصة يكون التخصيص فيها بنسبة 1 إلى 1 (مهمة واحدة لعامل واحد)."
-        },
-        {
-            question: "إيه الشرط الأساسي لتطبيق طريقة السمبلكس (Simplex)؟",
-            answer: "أن تكون جميع الدوال الخطية والمتغيرات غير سالبة، وتحويل المتباينات إلى معادلات متساوية بإضافة متغيرات راكدة (Slack) أو اصطناعية (Artificial)."
-        },
-        {
-            question: "ما الفرق بين دالة الهدف في التعظيم (Maximize) والتدنية (Minimize)؟",
-            answer: "التعظيم يُستخدم للأرباح والإنتاجية، والتدنية تُستخدم للتكاليف والوقت والمسافات، وتختلف طريقة اختيار المتغير الداخل في جدول السمبلكس بناءً على ذلك."
-        }
-    ],
-    "دراسات إدارة بالإنجليزية": [
-        {
-            question: "What is the primary role of SWOT analysis in strategic management?",
-            answer: "SWOT analysis evaluates internal Strengths and Weaknesses along with external Opportunities and Threats to formulate effective strategic decisions."
-        },
-        {
-            question: "What distinguishes autocratic leadership from democratic leadership?",
-            answer: "Autocratic leaders make decisions unilaterally without consulting the team, whereas democratic leaders encourage team participation and consensus in decision-making."
-        },
-        {
-            question: "Why is organizational culture considered a competitive advantage?",
-            answer: "A strong culture fosters employee engagement, reduces turnover, and aligns organizational values with core business goals, making it difficult for competitors to replicate."
-        }
-    ],
-    "اقتصاد كلي": [
-        {
-            question: "ما هو الفرق بين الناتج المحلي الإجمالي الاسمي (Nominal GDP) والحقيقي (Real GDP)؟",
-            answer: "الاسمي يحسب قيمة السلع والخدمات بأسعار السوق الجارية (متأثراً بالتضخم)، بينما الحقيقي يحسبها بأسعار سنة أساس ثابتة ليعكس حجم الإنتاج الفعلي فقط."
-        },
-        {
-            question: "كيف تؤثر السياسة المالية التوسعية على الاقتصاد القومي؟",
-            answer: "تتم بزيادة الإنفاق الحكومي أو خفض الضرائب لزيادة الطلب الكلي وتحفيز النمو وتقليل البطالة في فترات الركود الاقتصادي."
-        },
-        {
-            question: "ما هي فجوة التضخم (Inflationary Gap) ومتى تحدث؟",
-            answer: "تحدث عندما يتجاوز الطلب الكلي مستوى الإنتاج عند التوظيف الكامل، مما يؤدي لارتفاع المستوى العام للأسعار دون زيادة في الناتج الحقيقي."
-        }
-    ],
-    "محاسبة ضرائب": [
-        {
-            question: "ما هو الفرق بين التهرب الضريبي والتجنب الضريبي في القانون؟",
-            answer: "التهرب الضريبي جريمة غير قانونية لإخفاء الدخل أو تزوير المستندات، بينما التجنب الضريبي هو استغلال الثغرات والحوافز القانونية لتقليل العبء الضريبي بشكل مشروع."
-        },
-        {
-            question: "كيف يتم حساب وعاء الضريبة على أرباح الأشخاص الاعتبارية (الشركات)؟",
-            answer: "يبدأ من صافي الربح المحاسبي في قائمة الدخل ثم تُجرى التعديلات الضريبية (إضافة التكاليف غير واجبة الخصم واستبعاد الإيرادات المعفاة) للوصول للربح الضريبي الخاضع للضريبة."
-        },
-        {
-            question: "ما هي شروط خصم ضريبة القيمة المضافة المدفوعة على المدخلات؟",
-            answer: "أن تكون السلع والخدمات مرتبطة بالنشاط الخاضع للضريبة، ومؤيدة بفواتير ضريبية إلكترونية قانونية، ومسجلة في دفاتر المنشأة."
-        }
-    ],
-    "محاسبة تكاليف": [
-        {
-            question: "ما هو الفرق بين التكاليف المباشرة والتكاليف غير المباشرة؟",
-            answer: "التكاليف المباشرة يمكن تتبعها وتخصيصها بسهولة وبدقة لوحدة المنتج (مثل المواد الخام وأجور عمال الإنتاج)، بينما غير المباشرة يصعب تتبعها مباشرة وتحتاج لأسس توزيع (مثل إيجار المصنع والكهرباء)."
-        },
-        {
-            question: "كيف يساعد هامش المساهمة (Contribution Margin) في اتخاذ القرارات؟",
-            answer: "هامش المساهمة = سعر البيع - التكلفة المتغيرة. يوضح مدى مساهمة كل وحدة في تغطية التكاليف الثابتة وتحقيق الأرباح، ويُستخدم في قرارات التسعير وقبول الطلبيات الخاصة."
-        },
-        {
-            question: "ما هو نظام تكاليف الأوامر الإنتاجية (Job Order Costing) ومجالات استخدامه؟",
-            answer: "يُستخدم في الصناعات التي تنتج وفقاً لطلبات ومواصفات خاصة ومحددة لكل عميل وتختلف من أمر لآخر (مثل المطابع وورش النجارة والمقاولات)."
-        }
-    ]
-};
-// ============================================================
+
 
 function renderCoursePage() {
     const courseId = getUrlParam('id');
@@ -243,9 +152,15 @@ function renderCoursePage() {
 async function loadStudentQuestions(course, container) {
     const csvUrl = (typeof STUDENT_CSV_URL !== "undefined" ? STUDENT_CSV_URL : (window.STUDENT_CSV_URL || "")).trim();
 
-    // إذا كان الرابط فارغاً، نعرض 3 أسئلة تجريبية للمادة الحالية مع علامة "تجريبي"
+    // إذا كان الرابط فارغاً، نعرض رسالة أنه لا توجد أسئلة بعد
     if (!csvUrl) {
-        renderDemoQuestions(course, container);
+        container.innerHTML = `
+            <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
+                <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
+                <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها</p>
+                <p style="font-size: 0.92rem; color: var(--text-secondary);">كن أول من يسأل زملائه عن هذه المادة!</p>
+            </div>
+        `;
         return;
     }
 
@@ -323,43 +238,6 @@ async function loadStudentQuestions(course, container) {
     }
 }
 
-/**
- * عرض الأسئلة التجريبية للمادة الحالية مع علامة "تجريبي"
- */
-function renderDemoQuestions(course, container) {
-    container.innerHTML = "";
-
-    const key = course.formSubject || course.title;
-    const questions = DEMO_STUDENT_QA[key] || [
-        {
-            question: "كيف أستعد لمذاكرة هذه المادة والامتحانات؟",
-            answer: "ابدأ بمتابعة المحاضرات والملخصات المرفقة أولاً بأول، وركز على حل الأسئلة العملية ونماذج الامتحانات السابقة."
-        },
-        {
-            question: "أين أجد ملخصات وتمارين إضافية للمادة؟",
-            answer: "الملخصات متوفرة للتحميل في صفحة كل محاضرة، ويمكنك أيضاً مراجعة بنك الأسئلة والمراجع المقترحة."
-        },
-        {
-            question: "هل المادة تعتمد على الفهم أكثر أم الحفظ؟",
-            answer: "تعتمد على الفهم العميق للمفاهيم والتطبيق العملي، مع حفظ المصطلحات الأساسية والقواعد العامة."
-        }
-    ];
-
-    const list = document.createElement("div");
-    list.className = "ask-list";
-
-    questions.forEach((item, index) => {
-        const cardItem = {
-            subject: course.title,
-            question: item.question,
-            answer: item.answer
-        };
-        const card = createStudentQuestionCard(cardItem, index, true); // علامة تجريبي
-        list.appendChild(card);
-    });
-
-    container.appendChild(list);
-}
 
 /**
  * بناء كارت السؤال وإجابة الزميل بتصميم متناسق مع ask.html

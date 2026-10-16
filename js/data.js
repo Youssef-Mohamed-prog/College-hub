@@ -45,7 +45,7 @@ const courses = [
             {
                 id: 1,
                 title: "المحاضرة الأولى",
-                summaryBy: "اسم الطالب",
+                summaryBy: "",
                 description: "تعريف بالمادة وأهدافها، مراجعة سريعة لقواعد البيانات 1 والمتطلبات الأساسية.",
                 video:"https://youtu.be/tzqadCOoVhk?si=UimqJV6VNZBPRj_q",
                 lectureFile: "assets/files/lecture-01.pdf",
