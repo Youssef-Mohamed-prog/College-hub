@@ -31,7 +31,8 @@ const ENTRY_QUESTION = "entry.932564472";
 // ============================================================
 const STUDENT_FORM_URL = "";
 const STUDENT_CSV_URL = "";
-const STUDENT_FORM_ENTRY = "";
+const STUDENT_FORM_ENTRY_SUBJECT = "";
+const STUDENT_FORM_ENTRY_QUESTION = "";
 
 // إتاحة الروابط والثوابت في النطاق العام (window) لضمان وصول كل الملفات إليها
 if (typeof window !== "undefined") {
@@ -41,5 +42,7 @@ if (typeof window !== "undefined") {
     window.ENTRY_QUESTION = ENTRY_QUESTION;
     window.STUDENT_FORM_URL = STUDENT_FORM_URL;
     window.STUDENT_CSV_URL = STUDENT_CSV_URL;
-    window.STUDENT_FORM_ENTRY = STUDENT_FORM_ENTRY;
+    window.STUDENT_FORM_ENTRY_SUBJECT = STUDENT_FORM_ENTRY_SUBJECT;
+    window.STUDENT_FORM_ENTRY_QUESTION = STUDENT_FORM_ENTRY_QUESTION;
 }
+
