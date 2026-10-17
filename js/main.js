@@ -328,3 +328,50 @@ function getInstructorImageHTML(course, size = 36) {
                 style="width:${size}px;height:${size}px;" 
                 onerror="this.outerHTML='<div class=\\'instructor-avatar\\' style=\\'width:${size}px;height:${size}px;background:rgba(99, 102, 241, 0.15);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${size*0.4}px;color:var(--text-primary);border-radius:50%;border:2px solid rgba(99, 102, 241, 0.3)\\'>${initial}</div>'">`;
 }
+
+/**
+ * دالة تنظيف وتوحيد النصوص وإزالة علامات الاتجاه المخفية والمسافات الغريبة
+ * وتوحيد الحروف العربية وإزالة الأرقام والرموز اللاتينية من نهاية الأسماء
+ * @param {string} text - النص المراد تنظيفه
+ * @param {boolean} [stripTrailing=true] - هل يتم إزالة الأرقام واللواحق اللاتينية من نهاية الاسم
+ * @returns {string} النص بعد التنظيف والتوحيد
+ */
+function normalize(text, stripTrailing = true) {
+    if (!text || typeof text !== "string") return "";
+
+    let cleaned = text
+        // 1. إزالة علامات الاتجاه المخفية ومحارف التحكم (LRM, RLM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI, BOM, ZWSP...)
+        .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200B-\u200D\uFEFF]/g, "")
+        // 2. استبدال المسافات الغريبة (non-breaking space وغيرها) بمسافة عادية
+        .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, " ")
+        // 3. إزالة حركات التشكيل والتطويل (الكشيدة)
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+        // 4. توحيد الهمزات والألف والتاء المربوطة والياء
+        .replace(/[أإآا]/g, "ا")
+        .replace(/ة/g, "ه")
+        .replace(/ى/g, "ي")
+        // 5. تقليص المسافات المكررة وعمل trim وتصغير الحروف اللاتينية إن وجدت
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+    // توحيد المرادفات الشائعة مثل (إدارية / إدارة)
+    cleaned = cleaned.replace(/\bاداريه\b/g, "اداره");
+
+    // 6. إزالة الأرقام والحروف اللاتينية من آخر الاسم لو سبقتها حروف عربية (مثل: "قواعد البيانات 2" -> "قواعد البيانات")
+    if (stripTrailing) {
+        if (/[\u0600-\u06FF]/.test(cleaned)) {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9a-zA-Z]+)+$/g, "").trim();
+        } else {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9]+)+$/g, "").trim();
+        }
+    }
+
+    return cleaned;
+}
+
+if (typeof window !== "undefined") {
+    window.normalize = normalize;
+    window.normalizeSubject = normalize;
+}
+

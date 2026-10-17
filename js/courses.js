@@ -26,10 +26,6 @@ function renderCoursesPage() {
                         ${course.lectures.length} محاضرات
                     </span>
                 </div>
-                <div class="course-card-instructor">
-                    ${getInstructorImageHTML(course)}
-                    <span class="instructor-name">${course.creator}</span>
-                </div>
             </div>
             <div class="course-card-footer">
                 <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">ابدأ المادة ←</a>

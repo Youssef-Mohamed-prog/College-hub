@@ -498,28 +498,34 @@ async function loadQuestionsData() {
         }
 
         Papa.parse(csvText, {
-            header: true,            // الصف الأول يحتوي على أسماء الأعمدة
+            header: false,           // 1. قراءة الأعمدة بالترتيب وليس بالاسم
             skipEmptyLines: "greedy",// تجاهل الأسطر الفارغة
-            transformHeader: (header) => header.trim(), // تنظيف أسماء الأعمدة
             complete: (results) => {
-                const rows = results.data || [];
+                const allRows = results.data || [];
+                // 1. تجاهل صف العناوين (الصف الأول)
+                const dataRows = allRows.slice(1);
+
+                // 2. طباعة أول صف بعد الـ parse كما هو
+                console.log("📄 [ask.js] أول صف بعد الـ parse:", dataRows[0]);
+
                 const formatted = [];
+                dataRows.forEach((row) => {
+                    // 1. قراءة الأعمدة بالترتيب: العمود الأول (0) = المادة، التاني (1) = السؤال، التالت (2) = الإجابة
+                    const rawSubject = (row[0] !== undefined && row[0] !== null) ? String(row[0]).trim() : "عام";
+                    const question = (row[1] !== undefined && row[1] !== null) ? String(row[1]).trim() : "";
+                    const answer = (row[2] !== undefined && row[2] !== null) ? String(row[2]).trim() : "";
 
-                rows.forEach((row) => {
-                    // الأعمدة بالظبط: المادة، السؤال، الإجابة
-                    const subject = findColumnValue(row, "المادة");
-                    const question = findColumnValue(row, "السؤال");
-                    const answer = findColumnValue(row, "الإجابة");
-
-                    // إدراج السؤال فقط إذا كان يحتوي على نص سؤال
-                    if (question) {
-                        const cleanSubject = (subject === "دراسات إدارية بالإنجليزية") ? "دراسات إدارة بالإنجليزية" : (subject || "عام");
-                        formatted.push({
-                            subject: cleanSubject,
-                            question: question,
-                            answer: answer || "لم تتم إضافة إجابة بعد."
-                        });
+                    // 3. تجاهل أي صف عمود السؤال فيه فاضي، أو عمود الإجابة فاضي
+                    if (!question || !answer) {
+                        return;
                     }
+
+                    const cleanSubject = (rawSubject === "دراسات إدارية بالإنجليزية") ? "دراسات إدارة بالإنجليزية" : (rawSubject || "عام");
+                    formatted.push({
+                        subject: cleanSubject,
+                        question: question,
+                        answer: answer
+                    });
                 });
 
                 // شرط رقم 5: الأحدث يظهر أولاً (عكس ترتيب الصفوف)
@@ -550,10 +556,25 @@ function findColumnValue(row, targetName) {
     let key = Object.keys(row).find(k => k && k.trim() === targetName);
     if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
 
-    // محاولة ثانية: تطابق مرن بعد توحيد الحروف (مثل: الإجابة / الاجابة، المادة / الماده)
-    const normTarget = normalizeArabic(targetName);
-    key = Object.keys(row).find(k => k && normalizeArabic(k) === normTarget);
-    return (key && row[key] !== undefined && row[key] !== null) ? String(row[key]).trim() : "";
+    // محاولة ثانية: تطابق مرن بعد توحيد الحروف
+    const normTarget = normalize(targetName, false);
+    key = Object.keys(row).find(k => k && normalize(k, false) === normTarget);
+    if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+
+    if (normTarget.includes("اجاب") || normTarget.includes("رد")) {
+        key = Object.keys(row).find(k => k && (normalize(k, false).includes("اجاب") || normalize(k, false).includes("رد")));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+    if (normTarget.includes("سؤال")) {
+        key = Object.keys(row).find(k => k && normalize(k, false).includes("سؤال"));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+    if (normTarget.includes("ماد")) {
+        key = Object.keys(row).find(k => k && normalize(k, false).includes("ماد"));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+
+    return "";
 }
 
 
@@ -570,20 +591,22 @@ function showNoticeBanner() {
 // 5️⃣ الفلترة والبحث النصي في السؤال والإجابة
 // ============================================================
 function applyFilters() {
-    const query = normalizeArabic(state.searchQuery);
+    const query = normalize(state.searchQuery, false);
     const selected = state.selectedSubject;
+    const normSelected = normalize(selected, true);
 
     state.filteredQuestions = state.allQuestions.filter((item) => {
-        // 1. فلتر المادة
+        // 1. فلتر المادة بعد توحيد الحروف وحذف اللواحق والعلامات المخفية
+        const normItemSubject = normalize(item.subject, true);
         const matchesSubject = (selected === "الكل") || 
-            (item.subject.trim() === selected.trim()) ||
-            (selected.trim() === "دراسات إدارة بالإنجليزية" && item.subject.trim() === "دراسات إدارية بالإنجليزية");
+            (normItemSubject === normSelected) ||
+            (normSelected && (normItemSubject.includes(normSelected) || normSelected.includes(normItemSubject)));
 
         // 2. فلتر البحث (في نص السؤال أو الإجابة)
         let matchesSearch = true;
         if (query) {
-            const qNorm = normalizeArabic(item.question);
-            const aNorm = normalizeArabic(item.answer);
+            const qNorm = normalize(item.question, false);
+            const aNorm = normalize(item.answer, false);
             matchesSearch = qNorm.includes(query) || aNorm.includes(query);
         }
 
@@ -596,19 +619,53 @@ function applyFilters() {
 
 
 /**
- * دالة تنظيف وتوحيد الحروف العربية لتحسين دقة البحث
- * مثل: (أ، إ، آ -> ا) و (ة -> ه) و (ى -> ي) وإزالة التشكيل
+ * تنظيف وتوحيد النصوص وإزالة علامات الاتجاه المخفية والمسافات الغريبة
+ * وتوحيد الحروف العربية وإزالة الأرقام والرموز اللاتينية من نهاية الأسماء
+ * @param {string} text - النص المراد تنظيفه
+ * @param {boolean} [stripTrailing=true] - هل يتم إزالة الأرقام واللواحق اللاتينية من نهاية الاسم
+ * @returns {string} النص بعد التنظيف والتوحيد
  */
-function normalizeArabic(text) {
-    if (!text) return "";
-    return String(text)
-        .replace(/[أإآ]/g, "ا")
+function normalize(text, stripTrailing = true) {
+    if (!text || typeof text !== "string") return "";
+
+    let cleaned = text
+        // 1. إزالة علامات الاتجاه المخفية ومحارف التحكم (LRM, RLM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI, BOM, ZWSP...)
+        .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200B-\u200D\uFEFF]/g, "")
+        // 2. استبدال المسافات الغريبة (non-breaking space وغيرها) بمسافة عادية
+        .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, " ")
+        // 3. إزالة حركات التشكيل والتطويل (الكشيدة)
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+        // 4. توحيد الهمزات والألف والتاء المربوطة والياء
+        .replace(/[أإآا]/g, "ا")
         .replace(/ة/g, "ه")
         .replace(/ى/g, "ي")
-        .replace(/[\u064B-\u065F]/g, "") // إزالة حركات التشكيل
-        .toLowerCase()
-        .trim();
+        // 5. تقليص المسافات المكررة وعمل trim وتصغير الحروف اللاتينية إن وجدت
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+    // توحيد المرادفات الشائعة مثل (إدارية / إدارة)
+    cleaned = cleaned.replace(/\bاداريه\b/g, "اداره");
+
+    // 6. إزالة الأرقام والحروف اللاتينية من آخر الاسم لو سبقتها حروف عربية (مثل: "قواعد البيانات 2" -> "قواعد البيانات")
+    if (stripTrailing) {
+        if (/[\u0600-\u06FF]/.test(cleaned)) {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9a-zA-Z]+)+$/g, "").trim();
+        } else {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9]+)+$/g, "").trim();
+        }
+    }
+
+    return cleaned;
 }
+
+/**
+ * دالة متوافقة مع الاستدعاءات السابقة لـ normalizeArabic
+ */
+function normalizeArabic(text, stripTrailing = false) {
+    return normalize(text, stripTrailing);
+}
+
 
 
 // ============================================================

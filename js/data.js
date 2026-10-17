@@ -45,7 +45,7 @@ const courses = [
             {
                 id: 1,
                 title: "المحاضرة الأولى",
-                summaryBy: "",
+                summaryBy: "اسم طالب",
                 description: "تعريف بالمادة وأهدافها، مراجعة سريعة لقواعد البيانات 1 والمتطلبات الأساسية.",
                 video:"https://youtu.be/tzqadCOoVhk?si=UimqJV6VNZBPRj_q",
                 lectureFile: "assets/files/lecture-01.pdf",
@@ -71,13 +71,13 @@ const courses = [
         {
                 id: 1,
                 title: "المحاضرة الأولى",
-                summaryBy: "",
-                description: "",
-                video:"",
-                lectureFile: "",
-                summaryFile: "",
-                sectionUrl: "",
-                bookUrl: ""
+                summaryBy: "صباح عامر",
+                description: "في المحاضرة دي هنتعرف على أساسيات الاحتمالات ومفاهيمها الرئيسية، وإزاي نحسب احتمال حدوث الأحداث المختلفة، مع فهم الفرق بين الأحداث المستقلة والتابعة، والتطبيق على أمثلة عملية تساعدنا نستخدم الاحتمالات في تحليل البيانات واتخاذ القرارات.",
+                video:"https://youtu.be/KvaBFDr3UiA?si=GNrFpF_xE96yuf5t",
+                lectureFile: "المحاضرة الاولة احصاء وحزم بحوث العمليات.pdf",
+                summaryFile: "ملخص المحاضرة الاولى احصاء.pdf",
+                sectionUrl: "سكشن 1 احصاء وحزم بحوث العمليات.pdf",
+                bookUrl: "كتاب ( احصاء وحزم البحوث ).pdf"
             },     
         ]
     },

@@ -2,7 +2,7 @@
 // 📱 Service Worker — مجمع طلاب BIS (PWA)
 // ==========================================
 
-const CACHE_NAME = 'bis-hub-v5';
+const CACHE_NAME = 'bis-hub-v6';
 
 const STATIC_ASSETS = [
   './',

@@ -160,8 +160,12 @@ const NUMBER_WORDS_MAP = {
 function normalizeText(text, stripDefiniteArticle = true) {
     if (!text) return "";
     let cleaned = String(text)
-        // 1. إزالة التشكيل
-        .replace(/[\u064B-\u065F\u0670]/g, "")
+        // 0. إزالة علامات الاتجاه المخفية والتحكم (LRM, RLM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI, BOM, ZWSP...)
+        .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200B-\u200D\uFEFF]/g, "")
+        // 0.1 استبدال المسافات الغريبة (non-breaking space وغيرها) بمسافة عادية
+        .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, " ")
+        // 1. إزالة التشكيل والتطويل
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
         // 2. توحيد الألف والهمزات والتاء والياء
         .replace(/[أإآ]/g, "ا")
         .replace(/ة/g, "ه")
@@ -174,6 +178,7 @@ function normalizeText(text, stripDefiniteArticle = true) {
         .toLowerCase()
         .replace(/\s+/g, " ")
         .trim();
+
 
     if (stripDefiniteArticle) {
         cleaned = cleaned
@@ -201,6 +206,48 @@ function normalizeText(text, stripDefiniteArticle = true) {
 function cleanText(text) {
     return normalizeText(text, false);
 }
+
+/**
+ * تنظيف وتوحيد النصوص وإزالة علامات الاتجاه المخفية والمسافات الغريبة
+ * وتوحيد الحروف العربية وإزالة الأرقام والرموز اللاتينية من نهاية الأسماء
+ * @param {string} text - النص المراد تنظيفه
+ * @param {boolean} [stripTrailing=true] - هل يتم إزالة الأرقام واللواحق اللاتينية من نهاية الاسم
+ * @returns {string} النص بعد التنظيف والتوحيد
+ */
+function normalize(text, stripTrailing = true) {
+    if (!text || typeof text !== "string") return "";
+
+    let cleaned = text
+        // 1. إزالة علامات الاتجاه المخفية ومحارف التحكم (LRM, RLM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI, BOM, ZWSP...)
+        .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200B-\u200D\uFEFF]/g, "")
+        // 2. استبدال المسافات الغريبة (non-breaking space وغيرها) بمسافة عادية
+        .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, " ")
+        // 3. إزالة حركات التشكيل والتطويل (الكشيدة)
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+        // 4. توحيد الهمزات والألف والتاء المربوطة والياء
+        .replace(/[أإآا]/g, "ا")
+        .replace(/ة/g, "ه")
+        .replace(/ى/g, "ي")
+        // 5. تقليص المسافات المكررة وعمل trim وتصغير الحروف اللاتينية إن وجدت
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+    // توحيد المرادفات الشائعة مثل (إدارية / إدارة)
+    cleaned = cleaned.replace(/\bاداريه\b/g, "اداره");
+
+    // 6. إزالة الأرقام والحروف اللاتينية من آخر الاسم لو سبقتها حروف عربية (مثل: "قواعد البيانات 2" -> "قواعد البيانات")
+    if (stripTrailing) {
+        if (/[\u0600-\u06FF]/.test(cleaned)) {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9a-zA-Z]+)+$/g, "").trim();
+        } else {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9]+)+$/g, "").trim();
+        }
+    }
+
+    return cleaned;
+}
+
 
 // توحيد وتنظيف كلمات التوقف لتتطابق تماماً مع normalizeText
 const ARABIC_STOP_WORDS = new Set(RAW_STOP_WORDS.map(w => normalizeText(w, false)));
@@ -237,7 +284,8 @@ function buildCoursesCatalog() {
         if (course.id === 3 || course.title === "دراسات إدارية بالإنجليزية") {
             subjectText += " دراسات إدارة بالإنجليزية";
         }
-        const courseKeywords = extractKeywords(`${course.title} ${course.titleEn || ""} ${subjectText}`);
+        const normFormSubj = normalize(course.formSubject || course.title, true);
+        const courseKeywords = extractKeywords(`${course.title} ${course.titleEn || ""} ${subjectText} ${normFormSubj}`);
 
         // فهرسة محاضرات المادة
         const lecturesList = (course.lectures || []).map(lec => {
@@ -360,43 +408,46 @@ function parseCsvSafely(csvText) {
 function processRawCsvRows(rows) {
     if (!Array.isArray(rows) || rows.length < 2) return [];
 
-    const headers = rows[0].map(h => normalizeText(h, false));
-    const subjectIdx = headers.findIndex(h => h.includes("ماده") || h.includes("مادة"));
-    const questionIdx = headers.findIndex(h => h.includes("سؤال"));
-    const answerIdx = headers.findIndex(h => h.includes("اجابه") || h.includes("إجابة"));
+    // 1. تجاهل صف العناوين (الصف الأول)
+    const dataRows = rows.slice(1);
 
-    const sCol = (subjectIdx !== -1) ? subjectIdx : 0;
-    const qCol = (questionIdx !== -1) ? questionIdx : 1;
-    const aCol = (answerIdx !== -1) ? answerIdx : 2;
+    // 2. طباعة أول صف بعد الـ parse كما هو
+    console.log("📄 [chatbot.js] أول صف بعد الـ parse:", dataRows[0]);
 
     const parsedData = [];
-    for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
+    for (let i = 0; i < dataRows.length; i++) {
+        const row = dataRows[i];
         if (!row || row.length === 0) continue;
 
-        let subject = (row[sCol] !== undefined && row[sCol] !== null) ? String(row[sCol]).trim() : "عام";
-        const question = (row[qCol] !== undefined && row[qCol] !== null) ? String(row[qCol]).trim() : "";
-        const answer = (row[aCol] !== undefined && row[aCol] !== null) ? String(row[aCol]).trim() : "";
+        // 1. قراءة الأعمدة بالترتيب: العمود الأول (0) = المادة، التاني (1) = السؤال، التالت (2) = الإجابة
+        let rawSubject = (row[0] !== undefined && row[0] !== null) ? String(row[0]).trim() : "عام";
+        const question = (row[1] !== undefined && row[1] !== null) ? String(row[1]).trim() : "";
+        const answer = (row[2] !== undefined && row[2] !== null) ? String(row[2]).trim() : "";
 
-        // توحيد اسم المادة وفق الفورم
+        // 3. تجاهل أي صف عمود السؤال فيه فاضي، أو عمود الإجابة فاضي
+        if (!question || !answer) {
+            continue;
+        }
+
+        // تنظيف وتوحيد اسم المادة
+        let subject = rawSubject;
         if (subject === "دراسات إدارية بالإنجليزية") {
             subject = "دراسات إدارة بالإنجليزية";
         }
+        const normSubject = normalize(subject, true);
 
-        // تخطي الصفوف الخالية من السؤال أو الإجابة
-        if (question && answer) {
-            parsedData.push({
-                subject: subject || "عام",
-                question,
-                answer,
-                normalizedQuestion: normalizeText(question, true),
-                normalizedAnswer: normalizeText(answer, true),
-                questionKeywords: extractKeywords(question),
-                answerKeywords: extractKeywords(answer),
-                allKeywords: extractKeywords(question + " " + answer),
-                subjectKeywords: extractKeywords(subject)
-            });
-        }
+        parsedData.push({
+            subject: subject || "عام",
+            normalizedSubject: normSubject,
+            question,
+            answer,
+            normalizedQuestion: normalizeText(question, true),
+            normalizedAnswer: normalizeText(answer, true),
+            questionKeywords: extractKeywords(question),
+            answerKeywords: extractKeywords(answer),
+            allKeywords: extractKeywords(question + " " + answer),
+            subjectKeywords: extractKeywords(`${subject} ${normSubject}`)
+        });
     }
 
     return parsedData;

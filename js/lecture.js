@@ -103,19 +103,34 @@ function renderLecturePage() {
             </a>
         `);
     }
+    const summaryByVal = (lecture.summaryBy || '').trim();
     if (bookFile) {
-        downloadButtons.push(`
+        const bookButtonHTML = `
             <a href="${bookFile}" 
                download 
                class="btn btn-ghost btn-sm"
                onclick="handleDownload(event, '${bookFile}')">
                 📚 تحميل الكتاب
             </a>
+        `;
+        if (summaryByVal) {
+            downloadButtons.push(`
+                <div class="lecture-book-wrapper" style="display: inline-flex; flex-direction: column; gap: var(--space-xs); align-items: stretch;">
+                    <div id="lectureSummaryByBox" class="btn btn-ghost btn-sm" style="cursor: default; pointer-events: none; text-align: center;"></div>
+                    ${bookButtonHTML}
+                </div>
+            `);
+        } else {
+            downloadButtons.push(bookButtonHTML);
+        }
+    } else if (summaryByVal) {
+        downloadButtons.push(`
+            <div id="lectureSummaryByBox" class="btn btn-ghost btn-sm" style="cursor: default; pointer-events: none; text-align: center;"></div>
         `);
     }
 
     const actionsHTML = downloadButtons.length > 0 ? `
-        <div class="lecture-actions">
+        <div class="lecture-actions" style="align-items: flex-end;">
             ${downloadButtons.join('')}
         </div>
     ` : '';
@@ -208,6 +223,14 @@ function renderLecturePage() {
             </div>
         </div>
     `;
+
+    // عرض صاحب الملخص بـ textContent
+    if (summaryByVal) {
+        const summaryBox = container.querySelector('#lectureSummaryByBox');
+        if (summaryBox) {
+            summaryBox.textContent = `صاحب الملخص: ${summaryByVal}`;
+        }
+    }
 
     // Facade click → swap to real iframe
     const facade = container.querySelector('.video-facade');
