@@ -144,13 +144,22 @@ function renderCoursePage() {
     }
 }
 
+// ==========================================
+// 🔗 روابط وثوابت اسأل زميلك (Fallback في حال كان الكاش قديماً)
+// ==========================================
+const DEFAULT_STUDENT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKMg53WPGwBcquZmGAetNmjIwRPiPpS8120PrvIWX0_T5Lo180oQ4BcCW0OgSCtRoVGvjjas3t1Pys/pub?gid=1193762460&single=true&output=csv";
+const DEFAULT_STUDENT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdIIXiks6SOB4vPidFpHoicKakBhfUWtUwJZGQXOGX1ymeGTw/viewform";
+const DEFAULT_STUDENT_ENTRY_SUBJECT = "entry.1349988251";
+const DEFAULT_STUDENT_ENTRY_QUESTION = "entry.1862128244";
+
 /**
  * دالة جلب وعرض أسئلة الزمايل من CSV أو الوضع التجريبي
  * @param {object} course
  * @param {HTMLElement} container
  */
 async function loadStudentQuestions(course, container) {
-    const csvUrl = (typeof STUDENT_CSV_URL !== "undefined" ? STUDENT_CSV_URL : (window.STUDENT_CSV_URL || "")).trim();
+    const rawCsv = (typeof STUDENT_CSV_URL !== "undefined" && STUDENT_CSV_URL) ? STUDENT_CSV_URL : (window.STUDENT_CSV_URL || "");
+    const csvUrl = (rawCsv || DEFAULT_STUDENT_CSV_URL).trim();
 
     // إذا كان الرابط فارغاً، نعرض رسالة أنه لا توجد أسئلة بعد
     if (!csvUrl) {
@@ -184,6 +193,7 @@ async function loadStudentQuestions(course, container) {
 
         const targetSubject = (course.formSubject || course.title).trim();
         const normTarget = normalizeArabicText(targetSubject);
+        const normCourseTitle = normalizeArabicText(course.title);
 
         const matchingRows = [];
         records.forEach((row) => {
@@ -193,7 +203,12 @@ async function loadStudentQuestions(course, container) {
 
             if (question) {
                 const normSubj = normalizeArabicText(subject);
-                if (normSubj === normTarget || normSubj === normalizeArabicText(course.title)) {
+                const isMatch = (
+                    normSubj === normTarget ||
+                    normSubj === normCourseTitle ||
+                    (normTarget && (normSubj.includes(normTarget) || normTarget.includes(normSubj)))
+                );
+                if (isMatch) {
                     matchingRows.push({
                         subject: subject || course.title,
                         question: question,
@@ -414,7 +429,8 @@ function createStudentQuestionCard(item, index, isDemo) {
 function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = null }) {
     if (!triggerBtn || !panel) return;
 
-    const studentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+    const rawForm = (typeof STUDENT_FORM_URL !== "undefined" && STUDENT_FORM_URL) ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "");
+    const studentFormUrl = (rawForm || DEFAULT_STUDENT_FORM_URL).trim();
 
     panel.innerHTML = `
         <div class="student-ask-panel-meta">
@@ -591,7 +607,8 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
         // إضافة بادئة للسؤال: [عنوان المحاضرة] في صفحة المحاضرة، و [سؤال عام] للزرار الأخضر في صفحة المادة
         const finalQuestion = lectureTitle ? `[${lectureTitle}] ${questionText}` : `[سؤال عام] ${questionText}`;
 
-        const currentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+        const rawForm = (typeof STUDENT_FORM_URL !== "undefined" && STUDENT_FORM_URL) ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "");
+        const currentFormUrl = (rawForm || DEFAULT_STUDENT_FORM_URL).trim();
 
         // 1. الوضع التجريبي: إذا كان STUDENT_FORM_URL فارغاً (شرط 4-أ)
         if (!currentFormUrl) {
@@ -615,8 +632,10 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
             ? currentFormUrl
             : currentFormUrl.replace('/viewform', '/formResponse');
 
-        const entrySubject = (typeof STUDENT_FORM_ENTRY_SUBJECT !== "undefined" ? STUDENT_FORM_ENTRY_SUBJECT : (window.STUDENT_FORM_ENTRY_SUBJECT || "")).trim();
-        const entryQuestion = (typeof STUDENT_FORM_ENTRY_QUESTION !== "undefined" ? STUDENT_FORM_ENTRY_QUESTION : (window.STUDENT_FORM_ENTRY_QUESTION || "")).trim();
+        const rawEntrySubj = (typeof STUDENT_FORM_ENTRY_SUBJECT !== "undefined" && STUDENT_FORM_ENTRY_SUBJECT) ? STUDENT_FORM_ENTRY_SUBJECT : (window.STUDENT_FORM_ENTRY_SUBJECT || "");
+        const entrySubject = (rawEntrySubj || DEFAULT_STUDENT_ENTRY_SUBJECT).trim();
+        const rawEntryQ = (typeof STUDENT_FORM_ENTRY_QUESTION !== "undefined" && STUDENT_FORM_ENTRY_QUESTION) ? STUDENT_FORM_ENTRY_QUESTION : (window.STUDENT_FORM_ENTRY_QUESTION || "");
+        const entryQuestion = (rawEntryQ || DEFAULT_STUDENT_ENTRY_QUESTION).trim();
 
         const bodyParams = new URLSearchParams();
         if (entrySubject) {
@@ -688,6 +707,9 @@ function escapeHtml(str) {
  */
 function parseCSV(text) {
     if (!text || typeof text !== "string") return [];
+    if (text.charCodeAt(0) === 0xFEFF) {
+        text = text.slice(1);
+    }
     const rows = [];
     let currentRow = [""];
     let insideQuotes = false;
@@ -758,7 +780,23 @@ function findCSVColumn(row, colName) {
 
     const norm = normalizeArabicText(colName);
     key = Object.keys(row).find(k => k && normalizeArabicText(k) === norm);
-    return (key && row[key] !== undefined && row[key] !== null) ? String(row[key]).trim() : "";
+    if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+
+    // فحص إضافي للمرادفات الشائعة
+    if (norm.includes("اجاب") || norm.includes("رد")) {
+        key = Object.keys(row).find(k => k && (normalizeArabicText(k).includes("اجاب") || normalizeArabicText(k).includes("رد")));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+    if (norm.includes("سؤال")) {
+        key = Object.keys(row).find(k => k && normalizeArabicText(k).includes("سؤال"));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+    if (norm.includes("ماد")) {
+        key = Object.keys(row).find(k => k && normalizeArabicText(k).includes("ماد"));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+
+    return "";
 }
 
 /**
@@ -767,7 +805,9 @@ function findCSVColumn(row, colName) {
 function normalizeArabicText(str) {
     if (!str || typeof str !== "string") return "";
     return str
+        .replace(/[\u00A0\u200B-\u200D\uFEFF]/g, " ")
         .trim()
+        .replace(/\s+/g, " ")
         .replace(/[إأآا]/g, "ا")
         .replace(/ة/g, "ه")
         .replace(/ى/g, "ي")
