@@ -274,8 +274,7 @@ async function loadStudentQuestions(course, container) {
             container.innerHTML = `
                 <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
                     <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
-                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها في مادة ${course.title}</p>
-                    <p style="font-size: 0.92rem; color: var(--text-secondary);">تم العثور على ${dataRows.length} صفوف في الشيت لمواد أخرى، لكن لا توجد أسئلة مطابقة لهذه المادة حالياً.</p>
+                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0;">لسه مفيش أسئلة اتجاوب عليها في مادة ${course.title}</p>
                 </div>
             `;
             return;
@@ -487,11 +486,6 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
     panel.innerHTML = `
         <div class="student-ask-panel-meta">
             <span class="student-ask-subject-tag">📂 المادة: ${escapeHtml(subjectName)}</span>
-            ${studentFormUrl ? `
-                <a href="${studentFormUrl}" target="_blank" rel="noopener noreferrer" class="student-ask-fallback-link">
-                    لو في مشكلة افتح الفورم ↗
-                </a>
-            ` : ''}
         </div>
 
         <!-- حقل الحماية من السبام (Honeypot) مخفي تماماً عن الطلاب -->

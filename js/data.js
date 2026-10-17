@@ -51,7 +51,8 @@ const courses = [
                 lectureFile: "assets/files/lecture-01.pdf",
                 summaryFile: "assets/files/lecture-01-summary.pdf",
                 sectionUrl: "assets/files/lecture-01-section.pdf",
-                bookUrl: "assets/files/database/bookdatebase.pdf"
+                bookUrl: "assets/files/database/bookdatebase.pdf",
+                quizUrl: ""
             },
         ]
     },
@@ -77,7 +78,8 @@ const courses = [
                 lectureFile: "المحاضرة الاولة احصاء وحزم بحوث العمليات.pdf",
                 summaryFile: "ملخص المحاضرة الاولى احصاء.pdf",
                 sectionUrl: "سكشن 1 احصاء وحزم بحوث العمليات.pdf",
-                bookUrl: "كتاب ( احصاء وحزم البحوث ).pdf"
+                bookUrl: "كتاب ( احصاء وحزم البحوث ).pdf",
+                quizUrl: ""
             },     
         ]
     },
@@ -103,7 +105,8 @@ const courses = [
                 lectureFile: "",
                 summaryFile: "",
                 sectionUrl: "",
-                bookUrl: ""
+                bookUrl: "",
+                quizUrl: ""
             }
         ]
     },
@@ -129,7 +132,8 @@ const courses = [
                 lectureFile: "",
                 summaryFile: "",
                 sectionUrl: "",
-                bookUrl: ""
+                bookUrl: "",
+                quizUrl: ""
             }
         ]
     },
@@ -155,7 +159,8 @@ const courses = [
                 lectureFile: "",
                 summaryFile: "",
                 sectionUrl: "",
-                bookUrl: ""
+                bookUrl: "",
+                quizUrl: ""
             }
         ]
     },
@@ -181,7 +186,8 @@ const courses = [
                 lectureFile: "",
                 summaryFile: "",
                 sectionUrl: "",
-                bookUrl: ""
+                bookUrl: "",
+                quizUrl: ""
             }
         ]
     }

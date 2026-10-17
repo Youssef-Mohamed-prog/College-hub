@@ -71,6 +71,7 @@ function renderLecturePage() {
     const summaryFile = (lecture.summaryUrl || lecture.summaryFile || '').trim();
     const sectionFile = (lecture.sectionUrl || lecture.sectionFile || '').trim();
     const bookFile = (lecture.bookUrl || lecture.bookFile || '').trim();
+    const quizUrl = (lecture.quizUrl || '').trim();
 
     let downloadButtons = [];
     if (lectureFile) {
@@ -103,34 +104,29 @@ function renderLecturePage() {
             </a>
         `);
     }
-    const summaryByVal = (lecture.summaryBy || '').trim();
     if (bookFile) {
-        const bookButtonHTML = `
+        downloadButtons.push(`
             <a href="${bookFile}" 
                download 
                class="btn btn-ghost btn-sm"
                onclick="handleDownload(event, '${bookFile}')">
                 📚 تحميل الكتاب
             </a>
-        `;
-        if (summaryByVal) {
-            downloadButtons.push(`
-                <div class="lecture-book-wrapper" style="display: inline-flex; flex-direction: column; gap: var(--space-xs); align-items: stretch;">
-                    <div id="lectureSummaryByBox" class="btn btn-ghost btn-sm" style="cursor: default; pointer-events: none; text-align: center;"></div>
-                    ${bookButtonHTML}
-                </div>
-            `);
-        } else {
-            downloadButtons.push(bookButtonHTML);
-        }
-    } else if (summaryByVal) {
+        `);
+    }
+    if (quizUrl) {
         downloadButtons.push(`
-            <div id="lectureSummaryByBox" class="btn btn-ghost btn-sm" style="cursor: default; pointer-events: none; text-align: center;"></div>
+            <a href="${quizUrl}" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="btn btn-ghost btn-sm">
+                📝 كويز
+            </a>
         `);
     }
 
     const actionsHTML = downloadButtons.length > 0 ? `
-        <div class="lecture-actions" style="align-items: flex-end;">
+        <div class="lecture-actions">
             ${downloadButtons.join('')}
         </div>
     ` : '';
@@ -224,14 +220,6 @@ function renderLecturePage() {
         </div>
     `;
 
-    // عرض صاحب الملخص بـ textContent
-    if (summaryByVal) {
-        const summaryBox = container.querySelector('#lectureSummaryByBox');
-        if (summaryBox) {
-            summaryBox.textContent = `صاحب الملخص: ${summaryByVal}`;
-        }
-    }
-
     // Facade click → swap to real iframe
     const facade = container.querySelector('.video-facade');
     if (facade) {
@@ -280,11 +268,6 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
     panel.innerHTML = `
         <div class="student-ask-panel-meta">
             <span class="student-ask-subject-tag">📂 المادة: ${escapeHtml(subjectName)}</span>
-            ${studentFormUrl ? `
-                <a href="${studentFormUrl}" target="_blank" rel="noopener noreferrer" class="student-ask-fallback-link">
-                    لو في مشكلة افتح الفورم ↗
-                </a>
-            ` : ''}
         </div>
 
         <!-- حقل الحماية من السبام (Honeypot) مخفي تماماً عن الطلاب -->
