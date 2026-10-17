@@ -103,19 +103,34 @@ function renderLecturePage() {
             </a>
         `);
     }
+    const summaryByVal = (lecture.summaryBy || '').trim();
     if (bookFile) {
-        downloadButtons.push(`
+        const bookButtonHTML = `
             <a href="${bookFile}" 
                download 
                class="btn btn-ghost btn-sm"
                onclick="handleDownload(event, '${bookFile}')">
                 📚 تحميل الكتاب
             </a>
+        `;
+        if (summaryByVal) {
+            downloadButtons.push(`
+                <div class="lecture-book-wrapper" style="display: inline-flex; flex-direction: column; gap: var(--space-xs); align-items: stretch;">
+                    <div id="lectureSummaryByBox" class="btn btn-ghost btn-sm" style="cursor: default; pointer-events: none; text-align: center;"></div>
+                    ${bookButtonHTML}
+                </div>
+            `);
+        } else {
+            downloadButtons.push(bookButtonHTML);
+        }
+    } else if (summaryByVal) {
+        downloadButtons.push(`
+            <div id="lectureSummaryByBox" class="btn btn-ghost btn-sm" style="cursor: default; pointer-events: none; text-align: center;"></div>
         `);
     }
 
     const actionsHTML = downloadButtons.length > 0 ? `
-        <div class="lecture-actions">
+        <div class="lecture-actions" style="align-items: flex-end;">
             ${downloadButtons.join('')}
         </div>
     ` : '';
@@ -209,6 +224,14 @@ function renderLecturePage() {
         </div>
     `;
 
+    // عرض صاحب الملخص بـ textContent
+    if (summaryByVal) {
+        const summaryBox = container.querySelector('#lectureSummaryByBox');
+        if (summaryBox) {
+            summaryBox.textContent = `صاحب الملخص: ${summaryByVal}`;
+        }
+    }
+
     // Facade click → swap to real iframe
     const facade = container.querySelector('.video-facade');
     if (facade) {
@@ -233,6 +256,13 @@ function renderLecturePage() {
     });
 }
 
+// ==========================================
+// 🔗 روابط وثوابت اسأل زميلك (Fallback في حال كان الكاش قديماً)
+// ==========================================
+const DEFAULT_STUDENT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdIIXiks6SOB4vPidFpHoicKakBhfUWtUwJZGQXOGX1ymeGTw/viewform";
+const DEFAULT_STUDENT_ENTRY_SUBJECT = "entry.1349988251";
+const DEFAULT_STUDENT_ENTRY_QUESTION = "entry.1862128244";
+
 /**
  * إعداد صندوق "اسأل زميلك" التفاعلي المضمن داخل الصفحة
  * @param {object} options
@@ -244,7 +274,8 @@ function renderLecturePage() {
 function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = null }) {
     if (!triggerBtn || !panel) return;
 
-    const studentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+    const rawForm = (typeof STUDENT_FORM_URL !== "undefined" && STUDENT_FORM_URL) ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "");
+    const studentFormUrl = (rawForm || DEFAULT_STUDENT_FORM_URL).trim();
 
     panel.innerHTML = `
         <div class="student-ask-panel-meta">
@@ -421,7 +452,8 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
         // في صفحة المحاضرة ابدأ نص السؤال بـ [عنوان المحاضرة] (شرط 4)
         const finalQuestion = lectureTitle ? `[${lectureTitle}] ${questionText}` : questionText;
 
-        const currentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+        const rawForm = (typeof STUDENT_FORM_URL !== "undefined" && STUDENT_FORM_URL) ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "");
+        const currentFormUrl = (rawForm || DEFAULT_STUDENT_FORM_URL).trim();
 
         // 1. الوضع التجريبي: إذا كان STUDENT_FORM_URL فارغاً (شرط 4-أ)
         if (!currentFormUrl) {
@@ -445,8 +477,10 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
             ? currentFormUrl
             : currentFormUrl.replace('/viewform', '/formResponse');
 
-        const entrySubject = (typeof STUDENT_FORM_ENTRY_SUBJECT !== "undefined" ? STUDENT_FORM_ENTRY_SUBJECT : (window.STUDENT_FORM_ENTRY_SUBJECT || "")).trim();
-        const entryQuestion = (typeof STUDENT_FORM_ENTRY_QUESTION !== "undefined" ? STUDENT_FORM_ENTRY_QUESTION : (window.STUDENT_FORM_ENTRY_QUESTION || "")).trim();
+        const rawEntrySubj = (typeof STUDENT_FORM_ENTRY_SUBJECT !== "undefined" && STUDENT_FORM_ENTRY_SUBJECT) ? STUDENT_FORM_ENTRY_SUBJECT : (window.STUDENT_FORM_ENTRY_SUBJECT || "");
+        const entrySubject = (rawEntrySubj || DEFAULT_STUDENT_ENTRY_SUBJECT).trim();
+        const rawEntryQ = (typeof STUDENT_FORM_ENTRY_QUESTION !== "undefined" && STUDENT_FORM_ENTRY_QUESTION) ? STUDENT_FORM_ENTRY_QUESTION : (window.STUDENT_FORM_ENTRY_QUESTION || "");
+        const entryQuestion = (rawEntryQ || DEFAULT_STUDENT_ENTRY_QUESTION).trim();
 
         const bodyParams = new URLSearchParams();
         if (entrySubject) {

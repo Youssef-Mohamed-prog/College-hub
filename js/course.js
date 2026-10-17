@@ -40,14 +40,6 @@ function renderCoursePage() {
                         <h1 style="margin-bottom: 5px;">${course.title}</h1>
                         <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: var(--space-md); font-weight: 500;">${course.titleEn}</p>
                         <p class="course-desc">${course.description}</p>
-                        
-                        <div class="course-instructor-card">
-                            ${getInstructorImageHTML(course, 52)}
-                            <div class="instructor-info">
-                                <span class="instructor-label">المدرس</span>
-                                <span class="instructor-name">${course.creator}</span>
-                            </div>
-                        </div>
 
                         <!-- صف المحاضرات والمادة -->
                         <div class="course-meta-grid">
@@ -144,21 +136,31 @@ function renderCoursePage() {
     }
 }
 
+// ==========================================
+// 🔗 روابط وثوابت اسأل زميلك (Fallback في حال كان الكاش قديماً)
+// ==========================================
+const DEFAULT_STUDENT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKMg53WPGwBcquZmGAetNmjIwRPiPpS8120PrvIWX0_T5Lo180oQ4BcCW0OgSCtRoVGvjjas3t1Pys/pub?gid=1193762460&single=true&output=csv";
+const DEFAULT_STUDENT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdIIXiks6SOB4vPidFpHoicKakBhfUWtUwJZGQXOGX1ymeGTw/viewform";
+const DEFAULT_STUDENT_ENTRY_SUBJECT = "entry.1349988251";
+const DEFAULT_STUDENT_ENTRY_QUESTION = "entry.1862128244";
+
 /**
  * دالة جلب وعرض أسئلة الزمايل من CSV أو الوضع التجريبي
  * @param {object} course
  * @param {HTMLElement} container
  */
 async function loadStudentQuestions(course, container) {
-    const csvUrl = (typeof STUDENT_CSV_URL !== "undefined" ? STUDENT_CSV_URL : (window.STUDENT_CSV_URL || "")).trim();
+    const rawCsv = (typeof STUDENT_CSV_URL !== "undefined" && STUDENT_CSV_URL) ? STUDENT_CSV_URL : (window.STUDENT_CSV_URL || "");
+    const csvUrl = (rawCsv || DEFAULT_STUDENT_CSV_URL).trim();
 
-    // إذا كان الرابط فارغاً، نعرض رسالة أنه لا توجد أسئلة بعد
+    // 1. إذا كان الرابط فارغاً
     if (!csvUrl) {
+        console.warn("⚠️ رابط STUDENT_CSV_URL غير محدد في config.js أو فارغ.");
         container.innerHTML = `
             <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
-                <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
-                <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها</p>
-                <p style="font-size: 0.92rem; color: var(--text-secondary);">كن أول من يسأل زملائه عن هذه المادة!</p>
+                <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">⚙️</span>
+                <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">رابط الأسئلة غير محدد في ملف الإعدادات</p>
+                <p style="font-size: 0.92rem; color: var(--text-secondary);">يُرجى التحقق من STUDENT_CSV_URL في js/config.js.</p>
             </div>
         `;
         return;
@@ -173,42 +175,107 @@ async function loadStudentQuestions(course, container) {
     `;
 
     try {
-        const response = await fetch(csvUrl);
+        const fetchUrl = csvUrl + (csvUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
+        const response = await fetch(fetchUrl, { cache: 'no-cache' });
+
+        // طباعة حالة الرد والرابط في الكونسول (مطلوب 2)
+        console.log("🔗 الرابط المستخدم:", fetchUrl);
+        console.log("📡 حالة الرد (status):", response.status);
+
         if (!response.ok) {
             throw new Error(`خطأ في استجابة الخادم: ${response.status}`);
         }
 
         const csvText = await response.text();
-        const records = parseCSV(csvText);
+        const rawRows = parseCSV(csvText);
+
+        console.log("📊 إجمالي عدد الصفوف المقروءة من الملف:", rawRows.length);
+
+        if (!rawRows || rawRows.length < 2) {
+            console.warn("⚠️ لا توجد صفوف كافية في ملف CSV.");
+            container.innerHTML = `
+                <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
+                    <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
+                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لا توجد أسئلة منشورة حالياً في الشيت</p>
+                </div>
+            `;
+            return;
+        }
+
+        // 1. تجاهل صف العناوين (الصف الأول)
+        const dataRows = rawRows.slice(1);
+
+        // 2. طباعة أول صف بعد الـ parse كما هو في الـ console
+        console.log("📄 أول صف بعد الـ parse:", dataRows[0]);
 
         const targetSubject = (course.formSubject || course.title).trim();
-        const normTarget = normalizeArabicText(targetSubject);
+        const normTarget = normalize(targetSubject, true);
+        const normCourseTitle = normalize(course.title, true);
 
         const matchingRows = [];
-        records.forEach((row) => {
-            const subject = findCSVColumn(row, "المادة");
-            const question = findCSVColumn(row, "السؤال");
-            const answer = findCSVColumn(row, "الإجابة");
+        dataRows.forEach((row, index) => {
+            // 1. قراءة الأعمدة بالترتيب: العمود الأول (0) = المادة، التاني (1) = السؤال، التالت (2) = الإجابة
+            const rawSubject = (row[0] !== undefined && row[0] !== null) ? String(row[0]).trim() : "";
+            const question = (row[1] !== undefined && row[1] !== null) ? String(row[1]).trim() : "";
+            const answer = (row[2] !== undefined && row[2] !== null) ? String(row[2]).trim() : "";
 
-            if (question) {
-                const normSubj = normalizeArabicText(subject);
-                if (normSubj === normTarget || normSubj === normalizeArabicText(course.title)) {
-                    matchingRows.push({
-                        subject: subject || course.title,
-                        question: question,
-                        answer: answer
-                    });
-                }
+            // 3. تجاهل أي صف عمود السؤال فيه فاضي، أو عمود الإجابة فاضي
+            if (!question || !answer) {
+                return;
+            }
+
+            const normSubj = normalize(rawSubject, true);
+
+            // مطابقة اسم المادة بعد تنظيف الحروف المخفية والأرقام اللاحقة
+            const isMatch = Boolean(
+                normSubj && (
+                    normSubj === normTarget ||
+                    normSubj === normCourseTitle ||
+                    (normTarget && (normSubj.includes(normTarget) || normTarget.includes(normSubj)))
+                )
+            );
+
+            // 3. طباعة قيمة المادة مع charCodes وقيمة formSubject وهل اتطابقوا لكل صف
+            const rawSubjectCharCodes = Array.from(rawSubject || "").map(c => c.charCodeAt(0));
+            const formSubjectCharCodes = Array.from(targetSubject || "").map(c => c.charCodeAt(0));
+            const subjectDetails = Array.from(rawSubject || "")
+                .map(c => `${c} (U+${c.charCodeAt(0).toString(16).toUpperCase().padStart(4, "0")})`)
+                .join(", ");
+
+            console.log(
+                `🔎 [صف ${index + 1}] المادة بالشيت: "${rawSubject}" (charCodes: [${rawSubjectCharCodes.join(",")}]) | formSubject: "${targetSubject}" (charCodes: [${formSubjectCharCodes.join(",")}]) | تطابق: ${isMatch ? "✅ تطابق" : "❌ لا يوجد تطابق"}`
+            );
+            console.log(`🔎 [فحص المادة - تفاصيل صف ${index + 1}]:`, {
+                "قيمة المادة كما وصلت": rawSubject,
+                "charCodes المادة": rawSubjectCharCodes,
+                "تفاصيل الحروف (Hex)": subjectDetails || "(فارغ)",
+                "قيمة formSubject": targetSubject,
+                "charCodes formSubject": formSubjectCharCodes,
+                "المادة بعد normalize": normSubj,
+                "formSubject بعد normalize": normTarget,
+                "هل اتطابقوا؟": isMatch,
+                "يوجد سؤال؟": Boolean(question)
+            });
+
+            if (isMatch) {
+                matchingRows.push({
+                    subject: rawSubject || course.title,
+                    question: question,
+                    answer: answer
+                });
             }
         });
 
-        // إذا لم توجد صفوف للمادة
+        // طباعة عدد الصفوف بعد الفلتر
+        console.log("✅ عدد الصفوف بعد الفلتر:", matchingRows.length, matchingRows);
+
+        // إذا لم توجد صفوف للمادة بعد الفلتر
         if (matchingRows.length === 0) {
             container.innerHTML = `
                 <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
                     <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
-                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها</p>
-                    <p style="font-size: 0.92rem; color: var(--text-secondary);">كن أول من يسأل زملائه عن هذه المادة!</p>
+                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها في مادة ${course.title}</p>
+                    <p style="font-size: 0.92rem; color: var(--text-secondary);">تم العثور على ${dataRows.length} صفوف في الشيت لمواد أخرى، لكن لا توجد أسئلة مطابقة لهذه المادة حالياً.</p>
                 </div>
             `;
             return;
@@ -228,11 +295,12 @@ async function loadStudentQuestions(course, container) {
 
     } catch (error) {
         console.error("فشل تحميل أسئلة الزملاء من CSV:", error);
+        // رسالة عند فشل التحميل لتمييزها عن عدم وجود أسئلة (مطلوب 6)
         container.innerHTML = `
             <div class="student-qa-msg student-qa-error" style="text-align: center; padding: var(--space-xl); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-light);">
                 <span style="font-size: 2rem; display: block; margin-bottom: 8px;">⚠️</span>
-                <p style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">تعذر تحميل أسئلة الزملاء في الوقت الحالي</p>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">يُرجى التحقق من الاتصال بالإنترنت أو المحاولة لاحقاً.</p>
+                <p style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">تعذر تحميل الأسئلة، جرب بعد شوية</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">${error.message || 'يُرجى التحقق من الاتصال بالإنترنت أو مراجعة الكونسول'}</p>
             </div>
         `;
     }
@@ -413,7 +481,8 @@ function createStudentQuestionCard(item, index, isDemo) {
 function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = null }) {
     if (!triggerBtn || !panel) return;
 
-    const studentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+    const rawForm = (typeof STUDENT_FORM_URL !== "undefined" && STUDENT_FORM_URL) ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "");
+    const studentFormUrl = (rawForm || DEFAULT_STUDENT_FORM_URL).trim();
 
     panel.innerHTML = `
         <div class="student-ask-panel-meta">
@@ -587,10 +656,11 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
         textarea.classList.remove('has-error');
         errorEl.style.display = 'none';
 
-        // في صفحة المحاضرة ابدأ نص السؤال بـ [عنوان المحاضرة] (شرط 4)
-        const finalQuestion = lectureTitle ? `[${lectureTitle}] ${questionText}` : questionText;
+        // إضافة بادئة للسؤال: [عنوان المحاضرة] في صفحة المحاضرة، و [سؤال عام] للزرار الأخضر في صفحة المادة
+        const finalQuestion = lectureTitle ? `[${lectureTitle}] ${questionText}` : `[سؤال عام] ${questionText}`;
 
-        const currentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
+        const rawForm = (typeof STUDENT_FORM_URL !== "undefined" && STUDENT_FORM_URL) ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "");
+        const currentFormUrl = (rawForm || DEFAULT_STUDENT_FORM_URL).trim();
 
         // 1. الوضع التجريبي: إذا كان STUDENT_FORM_URL فارغاً (شرط 4-أ)
         if (!currentFormUrl) {
@@ -614,8 +684,10 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
             ? currentFormUrl
             : currentFormUrl.replace('/viewform', '/formResponse');
 
-        const entrySubject = (typeof STUDENT_FORM_ENTRY_SUBJECT !== "undefined" ? STUDENT_FORM_ENTRY_SUBJECT : (window.STUDENT_FORM_ENTRY_SUBJECT || "")).trim();
-        const entryQuestion = (typeof STUDENT_FORM_ENTRY_QUESTION !== "undefined" ? STUDENT_FORM_ENTRY_QUESTION : (window.STUDENT_FORM_ENTRY_QUESTION || "")).trim();
+        const rawEntrySubj = (typeof STUDENT_FORM_ENTRY_SUBJECT !== "undefined" && STUDENT_FORM_ENTRY_SUBJECT) ? STUDENT_FORM_ENTRY_SUBJECT : (window.STUDENT_FORM_ENTRY_SUBJECT || "");
+        const entrySubject = (rawEntrySubj || DEFAULT_STUDENT_ENTRY_SUBJECT).trim();
+        const rawEntryQ = (typeof STUDENT_FORM_ENTRY_QUESTION !== "undefined" && STUDENT_FORM_ENTRY_QUESTION) ? STUDENT_FORM_ENTRY_QUESTION : (window.STUDENT_FORM_ENTRY_QUESTION || "");
+        const entryQuestion = (rawEntryQ || DEFAULT_STUDENT_ENTRY_QUESTION).trim();
 
         const bodyParams = new URLSearchParams();
         if (entrySubject) {
@@ -687,6 +759,9 @@ function escapeHtml(str) {
  */
 function parseCSV(text) {
     if (!text || typeof text !== "string") return [];
+    if (text.charCodeAt(0) === 0xFEFF) {
+        text = text.slice(1);
+    }
     const rows = [];
     let currentRow = [""];
     let insideQuotes = false;
@@ -728,23 +803,7 @@ function parseCSV(text) {
         rows.push(currentRow);
     }
 
-    if (rows.length < 2) return [];
-
-    const headers = rows[0].map(h => (h || '').trim());
-    const result = [];
-
-    for (let i = 1; i < rows.length; i++) {
-        const rowValues = rows[i];
-        if (rowValues.length === 1 && rowValues[0].trim() === "") continue;
-
-        const record = {};
-        headers.forEach((header, index) => {
-            record[header] = rowValues[index] !== undefined ? rowValues[index].trim() : "";
-        });
-        result.push(record);
-    }
-
-    return result;
+    return rows;
 }
 
 /**
@@ -755,21 +814,72 @@ function findCSVColumn(row, colName) {
     let key = Object.keys(row).find(k => k && k.trim() === colName);
     if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
 
-    const norm = normalizeArabicText(colName);
-    key = Object.keys(row).find(k => k && normalizeArabicText(k) === norm);
-    return (key && row[key] !== undefined && row[key] !== null) ? String(row[key]).trim() : "";
+    const norm = normalize(colName, false);
+    key = Object.keys(row).find(k => k && normalize(k, false) === norm);
+    if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+
+    // فحص إضافي للمرادفات الشائعة
+    if (norm.includes("اجاب") || norm.includes("رد")) {
+        key = Object.keys(row).find(k => k && (normalize(k, false).includes("اجاب") || normalize(k, false).includes("رد")));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+    if (norm.includes("سؤال")) {
+        key = Object.keys(row).find(k => k && normalize(k, false).includes("سؤال"));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+    if (norm.includes("ماد")) {
+        key = Object.keys(row).find(k => k && normalize(k, false).includes("ماد"));
+        if (key && row[key] !== undefined && row[key] !== null) return String(row[key]).trim();
+    }
+
+    return "";
 }
 
 /**
- * توحيد الحروف العربية لمطابقة أكثر دقة
+ * تنظيف وتوحيد النصوص وإزالة علامات الاتجاه المخفية والمسافات الغريبة
+ * وتوحيد الحروف العربية وإزالة الأرقام والرموز اللاتينية من نهاية الأسماء
+ * @param {string} text - النص المراد تنظيفه
+ * @param {boolean} [stripTrailing=true] - هل يتم إزالة الأرقام واللواحق اللاتينية من نهاية الاسم
+ * @returns {string} النص بعد التنظيف والتوحيد
  */
-function normalizeArabicText(str) {
-    if (!str || typeof str !== "string") return "";
-    return str
-        .trim()
-        .replace(/[إأآا]/g, "ا")
+function normalize(text, stripTrailing = true) {
+    if (!text || typeof text !== "string") return "";
+
+    let cleaned = text
+        // 1. إزالة علامات الاتجاه المخفية ومحارف التحكم (LRM, RLM, LRE, RLE, PDF, LRO, RLO, LRI, RLI, FSI, PDI, BOM, ZWSP...)
+        .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069\u200B-\u200D\uFEFF]/g, "")
+        // 2. استبدال المسافات الغريبة (non-breaking space وغيرها) بمسافة عادية
+        .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, " ")
+        // 3. إزالة حركات التشكيل والتطويل (الكشيدة)
+        .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+        // 4. توحيد الهمزات والألف والتاء المربوطة والياء
+        .replace(/[أإآا]/g, "ا")
         .replace(/ة/g, "ه")
         .replace(/ى/g, "ي")
-        .replace(/[\u064B-\u065F\u0670]/g, "")
+        // 5. تقليص المسافات المكررة وعمل trim وتصغير الحروف اللاتينية إن وجدت
+        .replace(/\s+/g, " ")
+        .trim()
         .toLowerCase();
+
+    // توحيد المرادفات الشائعة مثل (إدارية / إدارة)
+    cleaned = cleaned.replace(/\bاداريه\b/g, "اداره");
+
+    // 6. إزالة الأرقام والحروف اللاتينية من آخر الاسم لو سبقتها حروف عربية (مثل: "قواعد البيانات 2" -> "قواعد البيانات")
+    if (stripTrailing) {
+        if (/[\u0600-\u06FF]/.test(cleaned)) {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9a-zA-Z]+)+$/g, "").trim();
+        } else {
+            cleaned = cleaned.replace(/(?:[\s\-_.:/]*[0-9\u0660-\u0669\u06F0-\u06F9]+)+$/g, "").trim();
+        }
+    }
+
+    return cleaned;
 }
+
+/**
+ * دالة متوافقة مع الاستدعاءات السابقة لـ normalizeArabicText
+ */
+function normalizeArabicText(str, stripTrailing = false) {
+    return normalize(str, stripTrailing);
+}
+
