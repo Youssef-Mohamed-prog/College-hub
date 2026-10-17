@@ -2,7 +2,7 @@
 // 📱 Service Worker — مجمع طلاب BIS (PWA)
 // ==========================================
 
-const CACHE_NAME = 'bis-hub-v1';
+const CACHE_NAME = 'bis-hub-v3';
 
 const STATIC_ASSETS = [
   './',
@@ -68,6 +68,24 @@ self.addEventListener('fetch', (event) => {
 
   // Don't intercept cross-origin requests (e.g. Firebase, Google Fonts, YouTube)
   if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // Config file (js/config.js): Network-first with cache fallback
+  if (url.pathname.endsWith('/js/config.js') || url.pathname.endsWith('/config.js')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(request);
+        })
+    );
     return;
   }
 

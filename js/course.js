@@ -173,7 +173,8 @@ async function loadStudentQuestions(course, container) {
     `;
 
     try {
-        const response = await fetch(csvUrl);
+        const fetchUrl = csvUrl + (csvUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
+        const response = await fetch(fetchUrl, { cache: 'no-cache' });
         if (!response.ok) {
             throw new Error(`خطأ في استجابة الخادم: ${response.status}`);
         }
@@ -587,8 +588,8 @@ function setupStudentAskBox({ triggerBtn, panel, subjectName, lectureTitle = nul
         textarea.classList.remove('has-error');
         errorEl.style.display = 'none';
 
-        // في صفحة المحاضرة ابدأ نص السؤال بـ [عنوان المحاضرة] (شرط 4)
-        const finalQuestion = lectureTitle ? `[${lectureTitle}] ${questionText}` : questionText;
+        // إضافة بادئة للسؤال: [عنوان المحاضرة] في صفحة المحاضرة، و [سؤال عام] للزرار الأخضر في صفحة المادة
+        const finalQuestion = lectureTitle ? `[${lectureTitle}] ${questionText}` : `[سؤال عام] ${questionText}`;
 
         const currentFormUrl = (typeof STUDENT_FORM_URL !== "undefined" ? STUDENT_FORM_URL : (window.STUDENT_FORM_URL || "")).trim();
 
