@@ -2,7 +2,7 @@
 // 📱 Service Worker — مجمع طلاب BIS (PWA)
 // ==========================================
 
-const CACHE_NAME = 'bis-hub-v4';
+const CACHE_NAME = 'bis-hub-v5';
 
 const STATIC_ASSETS = [
   './',
@@ -20,7 +20,6 @@ const STATIC_ASSETS = [
   'css/login.css',
   'css/ask.css',
   'css/chatbot.css',
-  'js/config.js',
   'js/data.js',
   'js/main.js',
   'js/courses.js',
@@ -37,12 +36,13 @@ const STATIC_ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS).catch((err) => {
         console.warn('Pre-cache warning:', err);
       });
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
@@ -66,25 +66,15 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // Don't intercept cross-origin requests (e.g. Firebase, Google Fonts, YouTube)
+  // Don't intercept cross-origin requests (e.g. Firebase, Google Fonts, YouTube, docs.google.com)
   if (url.origin !== self.location.origin) {
     return;
   }
 
-  // Config file (js/config.js): Network-first with cache fallback
+  // Config file (js/config.js): Always fetch live from network, never cache
   if (url.pathname.endsWith('/js/config.js') || url.pathname.endsWith('/config.js')) {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request);
-        })
+      fetch(request, { cache: 'no-cache' }).catch(() => caches.match(request))
     );
     return;
   }

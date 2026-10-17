@@ -161,13 +161,14 @@ async function loadStudentQuestions(course, container) {
     const rawCsv = (typeof STUDENT_CSV_URL !== "undefined" && STUDENT_CSV_URL) ? STUDENT_CSV_URL : (window.STUDENT_CSV_URL || "");
     const csvUrl = (rawCsv || DEFAULT_STUDENT_CSV_URL).trim();
 
-    // إذا كان الرابط فارغاً، نعرض رسالة أنه لا توجد أسئلة بعد
+    // 1. إذا كان الرابط فارغاً
     if (!csvUrl) {
+        console.warn("⚠️ رابط STUDENT_CSV_URL غير محدد في config.js أو فارغ.");
         container.innerHTML = `
             <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
-                <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
-                <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها</p>
-                <p style="font-size: 0.92rem; color: var(--text-secondary);">كن أول من يسأل زملائه عن هذه المادة!</p>
+                <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">⚙️</span>
+                <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">رابط الأسئلة غير محدد في ملف الإعدادات</p>
+                <p style="font-size: 0.92rem; color: var(--text-secondary);">يُرجى التحقق من STUDENT_CSV_URL في js/config.js.</p>
             </div>
         `;
         return;
@@ -184,12 +185,20 @@ async function loadStudentQuestions(course, container) {
     try {
         const fetchUrl = csvUrl + (csvUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
         const response = await fetch(fetchUrl, { cache: 'no-cache' });
+
+        // طباعة حالة الرد والرابط في الكونسول (مطلوب 2)
+        console.log("🔗 الرابط المستخدم:", fetchUrl);
+        console.log("📡 حالة الرد (status):", response.status);
+
         if (!response.ok) {
             throw new Error(`خطأ في استجابة الخادم: ${response.status}`);
         }
 
         const csvText = await response.text();
         const records = parseCSV(csvText);
+
+        // طباعة عدد الصفوف بعد الـ parse (مطلوب 2)
+        console.log("📊 عدد الصفوف بعد الـ parse:", records.length);
 
         const targetSubject = (course.formSubject || course.title).trim();
         const normTarget = normalizeArabicText(targetSubject);
@@ -203,11 +212,14 @@ async function loadStudentQuestions(course, container) {
 
             if (question) {
                 const normSubj = normalizeArabicText(subject);
+                // مطابقة مرنة تقبل "قواعد البيانات" و "قواعد البيانات 2" وتطابق تام أو احتوائي (مطلوب 4)
                 const isMatch = (
                     normSubj === normTarget ||
                     normSubj === normCourseTitle ||
+                    (course.id === 1 && (normSubj === "قواعد البيانات" || normSubj === "قواعد البيانات 2" || normSubj.includes("قواعد البيانات"))) ||
                     (normTarget && (normSubj.includes(normTarget) || normTarget.includes(normSubj)))
                 );
+
                 if (isMatch) {
                     matchingRows.push({
                         subject: subject || course.title,
@@ -218,13 +230,16 @@ async function loadStudentQuestions(course, container) {
             }
         });
 
-        // إذا لم توجد صفوف للمادة
+        // طباعة عدد الصفوف بعد الفلتر (مطلوب 2)
+        console.log("✅ عدد الصفوف بعد الفلتر:", matchingRows.length, matchingRows);
+
+        // إذا لم توجد صفوف للمادة بعد الفلتر (مطلوب 6)
         if (matchingRows.length === 0) {
             container.innerHTML = `
                 <div class="student-qa-msg student-qa-empty" style="text-align: center; padding: var(--space-2xl) var(--space-md); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-subtle);">
                     <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">📭</span>
-                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها</p>
-                    <p style="font-size: 0.92rem; color: var(--text-secondary);">كن أول من يسأل زملائه عن هذه المادة!</p>
+                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">لسه مفيش أسئلة اتجاوب عليها في مادة ${course.title}</p>
+                    <p style="font-size: 0.92rem; color: var(--text-secondary);">تم العثور على ${records.length} صفوف في الشيت لمواد أخرى، لكن لا توجد أسئلة مطابقة لهذه المادة حالياً.</p>
                 </div>
             `;
             return;
@@ -244,11 +259,12 @@ async function loadStudentQuestions(course, container) {
 
     } catch (error) {
         console.error("فشل تحميل أسئلة الزملاء من CSV:", error);
+        // رسالة عند فشل التحميل لتمييزها عن عدم وجود أسئلة (مطلوب 6)
         container.innerHTML = `
             <div class="student-qa-msg student-qa-error" style="text-align: center; padding: var(--space-xl); background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-light);">
                 <span style="font-size: 2rem; display: block; margin-bottom: 8px;">⚠️</span>
-                <p style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">تعذر تحميل أسئلة الزملاء في الوقت الحالي</p>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">يُرجى التحقق من الاتصال بالإنترنت أو المحاولة لاحقاً.</p>
+                <p style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">تعذر تحميل الأسئلة، جرب بعد شوية</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">${error.message || 'يُرجى التحقق من الاتصال بالإنترنت أو مراجعة الكونسول'}</p>
             </div>
         `;
     }
