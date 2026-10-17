@@ -211,6 +211,15 @@ input, textarea, select {
     background: none;
 }
 
+/* إخفاء إطار الفوكس عند الضغط بالماوس واللمس وإبقاؤه لمستخدمي الكيبورد (Tab) */
+:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+.btn:focus:not(:focus-visible),
+.course-card:focus:not(:focus-visible) {
+    outline: none;
+}
+
 /* ==========================================
    📐 Layout
    ========================================== */
