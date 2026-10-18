@@ -52,7 +52,7 @@ const courses = [
                 summaryFile: "assets/files/lecture-01-summary.pdf",
                 sectionUrl: "assets/files/lecture-01-section.pdf",
                 bookUrl: "assets/files/database/bookdatebase.pdf",
-                quizUrl: ""
+                quizUrl: "9"
             },
         ]
     },
@@ -79,7 +79,7 @@ const courses = [
                 summaryFile: "ملخص المحاضرة الاولى احصاء.pdf",
                 sectionUrl: "سكشن 1 احصاء وحزم بحوث العمليات.pdf",
                 bookUrl: "كتاب ( احصاء وحزم البحوث ).pdf",
-                quizUrl: ""
+                quizUrl: "9"
             },     
         ]
     },

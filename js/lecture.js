@@ -118,7 +118,7 @@ function renderLecturePage() {
         downloadButtons.push(`
             <a href="${quizUrl}" 
                target="_blank" 
-               rel="noopener noreferrer" 
+               rel="noopener" 
                class="btn btn-ghost btn-sm">
                 📝 كويز
             </a>
