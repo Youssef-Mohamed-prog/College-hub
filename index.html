@@ -15,13 +15,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="theme-color" content="#4F46E5">
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
-            });
-        }
-    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap">
@@ -49,7 +43,7 @@
                 </h1>
                 <p>مذاكرتك أسهل مع فيديوهات شرح وملخصات لكل محاضرة في مواد BIS.</p>
                 <div class="hero-buttons">
-                    <a href="courses.html" class="btn btn-cta btn-lg">استعرض المواد ←</a>
+                    <a href="courses.html" class="btn btn-cta btn-lg">استعرض المواد <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></a>
                     <a href="about.html" class="btn btn-outline btn-lg">تعرّف علينا</a>
                 </div>
             </div>
@@ -76,7 +70,7 @@
                     <!-- Rendered by JS -->
                 </div>
                 <div class="text-center mt-xl">
-                    <a href="courses.html" class="btn btn-outline">عرض جميع المواد ←</a>
+                    <a href="courses.html" class="btn btn-outline">عرض جميع المواد <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></a>
                 </div>
             </div>
         </section>
@@ -87,7 +81,7 @@
                 <div class="cta-box">
                     <h2>جاهز تبدأ مذكرتك من هنا؟</h2>
                     <p>تصفّح مواد الدفعة وابدأ من أول محاضرة، فالشرح والملخصات بانتظارك.</p>
-                    <a href="courses.html" class="btn btn-cta btn-lg">ابدأ الآن ←</a>
+                    <a href="courses.html" class="btn btn-cta btn-lg">ابدأ الآن <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></a>
                 </div>
             </div>
         </section>
@@ -127,12 +121,12 @@
                     <a href="contact.html" class="stat-card stat-card-link" data-animate="fadeInUp">
                         <div class="stat-number">نذاكر مع بعض</div>
                         <div class="stat-label">عندك ملخص؟ ضيفه معانا</div>
-                        <div class="stat-card-cta">تواصل معنا ←</div>
+                        <div class="stat-card-cta">تواصل معنا <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></div>
                     </a>
                     <a href="contact.html" class="stat-card stat-card-link" data-animate="fadeInUp">
                         <div class="stat-number">اقترح</div>
                         <div class="stat-label">مادة أو ملخص عايزه؟ قول</div>
-                        <div class="stat-card-cta">تواصل معنا ←</div>
+                        <div class="stat-card-cta">تواصل معنا <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></div>
                     </a>
                 `;
             }
@@ -158,7 +152,7 @@
                             </div>
                         </div>
                         <div class="course-card-footer">
-                            <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">ابدأ المادة ←</a>
+                            <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">ابدأ المادة <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></a>
                         </div>
                     </div>
                 `).join('');

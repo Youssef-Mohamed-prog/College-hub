@@ -28,7 +28,7 @@ function renderCoursesPage() {
                 </div>
             </div>
             <div class="course-card-footer">
-                <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">ابدأ المادة ←</a>
+                <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">ابدأ المادة <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></a>
             </div>
         </div>
     `).join('');

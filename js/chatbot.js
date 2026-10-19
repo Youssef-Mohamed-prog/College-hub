@@ -457,6 +457,12 @@ function processRawCsvRows(rows) {
  * تحميل ومعالجة بيانات الأسئلة من Google Sheet مع إعادة المحاولة والانتظار
  */
 async function loadSheetQuestions(retryOnFail = true) {
+    if (!navigator.onLine) {
+        chatbotState.csvFetchFailed = true;
+        chatbotState.isCsvLoading = false;
+        return [];
+    }
+
     if (chatbotState.sheetQuestions && chatbotState.sheetQuestions.length > 0) {
         return chatbotState.sheetQuestions;
     }
@@ -775,6 +781,10 @@ function searchSheetQuestions(userQuery) {
  * الدالة الرئيسية لتوليد رد البوت
  */
 async function processUserMessage(userText) {
+    if (!navigator.onLine) {
+        return;
+    }
+
     const trimmed = userText.trim();
     if (!trimmed) return;
 
@@ -1111,7 +1121,7 @@ function injectChatbotDOM() {
                 </div>
                 <div class="chatbot-header-text">
                     <h3>مساعد طلاب BIS</h3>
-                    <span>إجابات فورية من المقررات والشيت</span>
+                    <span>إجابات فورية على مواد دراستك وأسئلتك</span>
                 </div>
             </div>
             <div class="chatbot-header-actions">
@@ -1157,6 +1167,9 @@ function injectChatbotDOM() {
     if (form && input) {
         form.addEventListener("submit", (e) => {
             e.preventDefault();
+            if (!navigator.onLine) {
+                return;
+            }
             const val = input.value;
             if (val.trim()) {
                 input.value = "";
@@ -1177,6 +1190,9 @@ function injectChatbotDOM() {
     setTimeout(() => {
         if (hint) hint.classList.add("hidden");
     }, 8000);
+
+    // مراقبة اتصال الإنترنت داخل الشات
+    initChatbotNetworkMonitor();
 }
 
 /**
@@ -1230,7 +1246,7 @@ function renderWelcomeMessage() {
 
     const welcomeText = document.createElement("div");
     welcomeText.className = "chatbot-bubble-text";
-    welcomeText.textContent = "أهلاً بك يا بطل! 🎓 أنا المساعد الذكي لمجمع طلاب BIS.\nأقدر أساعدك في الوصول للمحاضرات والملخصات والكتب، أو الإجابة على استفسارات المواد فورياً بدون إنترنت.\n\nجرّب تضغط على أي سؤال:";
+    welcomeText.textContent = "أقدر أساعدك في الوصول للمحاضرات والملخصات والكتب، أو الإجابة على استفسارات المواد فوريًا.";
     container.appendChild(welcomeText);
 
     // الأمثلة الثلاثة للضغط عليها
@@ -1259,6 +1275,7 @@ function renderWelcomeMessage() {
         chip.appendChild(textSpan);
 
         chip.addEventListener("click", () => {
+            if (!navigator.onLine) return;
             processUserMessage(text);
         });
 
@@ -1345,6 +1362,85 @@ function scrollToBottom() {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 }
+
+/**
+ * 📡 مراقبة اتصال الإنترنت داخل الشات
+ */
+function initChatbotNetworkMonitor() {
+    const input = document.getElementById("bisChatbotInput");
+    const sendBtn = document.getElementById("bisChatbotSend");
+    const windowEl = document.getElementById("bisChatbotWindow");
+
+    function updateChatOnlineStatus(isOnline) {
+        let notice = document.getElementById("bisChatbotOfflineNotice");
+        if (!isOnline) {
+            if (!notice && windowEl) {
+                notice = document.createElement("div");
+                notice.id = "bisChatbotOfflineNotice";
+                notice.className = "chatbot-offline-notice";
+                notice.setAttribute("role", "alert");
+                notice.setAttribute("aria-live", "assertive");
+                notice.innerHTML = `
+                    <div class="cute-offline-icon-wrap">
+                        <svg class="cute-offline-svg" width="34" height="34" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <g class="cute-cloud-body">
+                                <path d="M18 46h28a12 12 0 0 0 4-23.3 14 14 0 0 0-26.6-4.2A11 11 0 0 0 18 46z" fill="#E0E7FF" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M25 33c.8-1.5 2.5-1.5 3.3 0" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M37 33c.8-1.5 2.5-1.5 3.3 0" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round"/>
+                                <circle cx="23" cy="36" r="2.8" fill="#F472B6" opacity="0.8"/>
+                                <circle cx="42" cy="36" r="2.8" fill="#F472B6" opacity="0.8"/>
+                                <path d="M31 38c1.5-1 3.5-1 5 0" stroke="#4338CA" stroke-width="1.8" stroke-linecap="round"/>
+                            </g>
+                            <g class="cute-wifi-cross">
+                                <path d="M22 13a17 17 0 0 1 20 0" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="2 3"/>
+                                <path d="M27 18a10 10 0 0 1 10 0" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round"/>
+                                <line x1="44" y1="10" x2="20" y2="24" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/>
+                            </g>
+                            <circle cx="48" cy="42" r="2" fill="#F59E0B" class="cute-sparkle"/>
+                        </svg>
+                    </div>
+                    <div class="chatbot-offline-text">معلش، الموقع محتاج إنترنت عشان يشتغل. أول ما النت يرجع كمّل من مكانك.</div>
+                `;
+                const header = windowEl.querySelector(".chatbot-header");
+                if (header && header.nextSibling) {
+                    windowEl.insertBefore(notice, header.nextSibling);
+                } else if (windowEl) {
+                    windowEl.prepend(notice);
+                }
+            }
+            if (notice) notice.style.display = "flex";
+            if (input) {
+                if (!input.hasAttribute("data-prev-ph")) {
+                    input.setAttribute("data-prev-ph", input.placeholder || "");
+                }
+                input.placeholder = "الموقع محتاج إنترنت عشان يشتغل...";
+                input.disabled = true;
+            }
+            if (sendBtn) {
+                sendBtn.disabled = true;
+            }
+        } else {
+            if (notice) notice.style.display = "none";
+            if (input) {
+                input.disabled = false;
+                if (input.hasAttribute("data-prev-ph")) {
+                    input.placeholder = input.getAttribute("data-prev-ph");
+                }
+            }
+            if (sendBtn) {
+                sendBtn.disabled = false;
+            }
+        }
+    }
+
+    window.addEventListener("offline", () => updateChatOnlineStatus(false));
+    window.addEventListener("online", () => updateChatOnlineStatus(true));
+
+    if (!navigator.onLine) {
+        updateChatOnlineStatus(false);
+    }
+}
+
 
 
 // ------------------------------------------------------------

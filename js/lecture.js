@@ -189,14 +189,14 @@ function renderLecturePage() {
                     <div class="lecture-nav">
                         ${prevLecture ? `
                             <a href="lecture.html?course=${course.id}&lecture=${prevLecture.id}" class="btn btn-outline btn-sm">
-                                → المحاضرة السابقة: ${prevLecture.title}
+                                المحاضرة السابقة: ${prevLecture.title} <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg>
                             </a>
                         ` : `
-                            <span class="btn btn-outline btn-sm btn-disabled">→ المحاضرة السابقة</span>
+                            <span class="btn btn-outline btn-sm btn-disabled">المحاضرة السابقة <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg></span>
                         `}
                         ${nextLecture ? `
                             <a href="lecture.html?course=${course.id}&lecture=${nextLecture.id}" class="btn btn-cta btn-sm">
-                                المحاضرة التالية: ${nextLecture.title} ←
+                                المحاضرة التالية: ${nextLecture.title} <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg>
                             </a>
                         ` : `
                             <a href="course.html?id=${course.id}" class="btn btn-cta btn-sm">
@@ -213,7 +213,7 @@ function renderLecturePage() {
                         ${sidebarHTML}
                     </div>
                     <a href="course.html?id=${course.id}" class="btn btn-outline btn-sm mt-lg" style="width:100%;">
-                        → عودة لصفحة المادة
+                        عودة لصفحة المادة <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg>
                     </a>
                 </aside>
             </div>

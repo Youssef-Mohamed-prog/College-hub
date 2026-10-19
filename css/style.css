@@ -556,6 +556,36 @@ input, textarea, select {
 }
 
 /* ==========================================
+   ↖️ Arrow Up-Left Icon & Interactions
+   ========================================== */
+.arrow-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: currentColor;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn:hover .arrow-icon,
+.btn:focus .arrow-icon,
+.btn:focus-visible .arrow-icon,
+a:hover .arrow-icon,
+a:focus .arrow-icon,
+a:focus-visible .arrow-icon,
+button:hover .arrow-icon,
+button:focus .arrow-icon,
+button:focus-visible .arrow-icon,
+.stat-card:hover .arrow-icon,
+.stat-card:focus-within .arrow-icon,
+.lecture-card:hover .arrow-icon,
+.lecture-card:focus .arrow-icon,
+.lecture-card:focus-visible .arrow-icon,
+.arrow-icon:hover,
+.arrow-icon:focus {
+    transform: translate(-3px, -3px);
+}
+
+/* ==========================================
    📊 Stats Section
    ========================================== */
 .stats-section {
@@ -1034,14 +1064,19 @@ a.stat-card-link {
 }
 
 .lecture-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.2rem;
     color: var(--text-muted);
-    transition: var(--transition);
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.lecture-card:hover .lecture-arrow {
+.lecture-card:hover .lecture-arrow,
+.lecture-card:focus .lecture-arrow,
+.lecture-card:focus-visible .lecture-arrow {
     color: var(--accent-1);
-    transform: translateX(-4px);
+    transform: translate(-3px, -3px);
 }
 
 /* ==========================================
@@ -2052,5 +2087,109 @@ summary:focus, summary:focus-visible, label:focus {
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* ==========================================
+   📡 Offline Notification Banner & Cute Icon
+   ========================================== */
+.site-offline-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 999999;
+    background: rgba(254, 242, 242, 0.98);
+    color: #991B1B;
+    border-bottom: 2px solid #FCA5A5;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 10px 16px;
+    direction: rtl;
+    text-align: right;
+    animation: slideDownOffline 0.35s ease forwards;
+}
+
+[data-theme="dark"] .site-offline-banner {
+    background: rgba(35, 15, 20, 0.96);
+    color: #FCA5A5;
+    border-bottom-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+}
+
+.site-offline-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.site-offline-text {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+@keyframes slideDownOffline {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cuteOfflineFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-4px) rotate(-2deg);
+    }
+}
+
+@keyframes cuteSparklePulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.85);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+.cute-offline-svg {
+    animation: cuteOfflineFloat 2.4s ease-in-out infinite;
+    display: block;
+    flex-shrink: 0;
+}
+
+.cute-offline-svg .cute-sparkle {
+    animation: cuteSparklePulse 1.8s ease-in-out infinite;
+    transform-origin: 48px 42px;
+}
+
+@media (max-width: 600px) {
+    .site-offline-banner {
+        padding: 8px 12px;
+    }
+    .site-offline-content {
+        gap: 10px;
+    }
+    .site-offline-text {
+        font-size: 0.84rem;
+    }
+    .cute-offline-svg {
+        width: 32px;
+        height: 32px;
+    }
+}
+
 
 

@@ -146,12 +146,17 @@
 }
 
 .login-btn .btn-icon {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+    transition: transform 0.2s ease;
 }
 
-.login-btn:hover .btn-icon {
-    transform: translateX(-4px);
+.login-btn:hover .btn-icon,
+.login-btn:focus .btn-icon,
+.login-btn:focus-visible .btn-icon {
+    transform: translate(-3px, -3px);
 }
 
 .auth-switch {

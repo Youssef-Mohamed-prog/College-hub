@@ -534,6 +534,61 @@
     transform: none;
 }
 
+.chatbot-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--bg-secondary);
+}
+
+/* تنبيه انقطاع الإنترنت داخل الشات */
+.chatbot-offline-notice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    margin: 8px 12px 4px 12px;
+    background: rgba(254, 242, 242, 0.96);
+    border: 1px solid #FCA5A5;
+    border-radius: var(--radius-md);
+    color: #991B1B;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.45;
+    direction: rtl;
+    text-align: right;
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.08);
+    animation: fadeInOfflineNotice 0.3s ease;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .chatbot-offline-notice {
+    background: rgba(45, 18, 25, 0.95);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #FCA5A5;
+}
+
+.chatbot-offline-notice .cute-offline-icon-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-offline-notice .chatbot-offline-text {
+    flex: 1;
+}
+
+@keyframes fadeInOfflineNotice {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* -----------------------------------------
    5. التجاوب مع الموبايل (Mobile Responsive)
    ----------------------------------------- */

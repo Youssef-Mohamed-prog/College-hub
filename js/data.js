@@ -311,3 +311,85 @@ function getLevelClass(level) {
         default: return 'level-beginner';
     }
 }
+
+// ==========================================
+// 📡 مراقبة حالة الاتصال بالإنترنت وإلغاء الأوفلاين
+// ==========================================
+
+// 1. إلغاء أي Service Worker قديم ومسح الكاش المخزن لضمان العمل بالإنترنت فقط
+if (typeof window !== "undefined") {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(reg => reg.unregister());
+        }).catch(() => {});
+    }
+    if ('caches' in window) {
+        caches.keys().then(keys => {
+            keys.forEach(key => caches.delete(key));
+        }).catch(() => {});
+    }
+}
+
+/**
+ * عرض رسالة واضحة في أعلى الصفحة عند انقطاع الإنترنت مع أيقونة أنيميشن كيوت
+ */
+function initNetworkStatusMonitor() {
+    if (typeof document === "undefined") return;
+
+    let banner = document.getElementById('siteOfflineBanner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'siteOfflineBanner';
+        banner.className = 'site-offline-banner';
+        banner.setAttribute('role', 'alert');
+        banner.setAttribute('aria-live', 'assertive');
+        banner.style.display = 'none';
+        banner.innerHTML = `
+            <div class="site-offline-content">
+                <div class="cute-offline-icon-wrap">
+                    <svg class="cute-offline-svg" width="38" height="38" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <g class="cute-cloud-body">
+                            <path d="M18 46h28a12 12 0 0 0 4-23.3 14 14 0 0 0-26.6-4.2A11 11 0 0 0 18 46z" fill="#E0E7FF" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M25 33c.8-1.5 2.5-1.5 3.3 0" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M37 33c.8-1.5 2.5-1.5 3.3 0" stroke="#4338CA" stroke-width="2.2" stroke-linecap="round"/>
+                            <circle cx="23" cy="36" r="2.8" fill="#F472B6" opacity="0.8"/>
+                            <circle cx="42" cy="36" r="2.8" fill="#F472B6" opacity="0.8"/>
+                            <path d="M31 38c1.5-1 3.5-1 5 0" stroke="#4338CA" stroke-width="1.8" stroke-linecap="round"/>
+                        </g>
+                        <g class="cute-wifi-cross">
+                            <path d="M22 13a17 17 0 0 1 20 0" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="2 3"/>
+                            <path d="M27 18a10 10 0 0 1 10 0" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round"/>
+                            <line x1="44" y1="10" x2="20" y2="24" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+                        <circle cx="48" cy="42" r="2" fill="#F59E0B" class="cute-sparkle"/>
+                    </svg>
+                </div>
+                <p class="site-offline-text">معلش، الموقع محتاج إنترنت عشان يشتغل. أول ما النت يرجع كمّل من مكانك.</p>
+            </div>
+        `;
+        document.body.prepend(banner);
+    }
+
+    function updateStatus() {
+        const isOnline = navigator.onLine;
+        if (!isOnline) {
+            banner.style.display = 'block';
+            document.body.classList.add('is-offline');
+        } else {
+            banner.style.display = 'none';
+            document.body.classList.remove('is-offline');
+        }
+    }
+
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    updateStatus();
+}
+
+if (typeof document !== "undefined") {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNetworkStatusMonitor);
+    } else {
+        initNetworkStatusMonitor();
+    }
+}

@@ -954,7 +954,7 @@ function renderEmptyState(container) {
     } else {
         const askNowBtn = document.createElement("a");
         askNowBtn.className = "btn btn-cta btn-sm";
-        askNowBtn.textContent = "اطرح سؤالك الآن ←";
+        askNowBtn.innerHTML = `اطرح سؤالك الآن <svg class="arrow-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="17" x2="7" y2="7"></line><polyline points="7 17 7 7 17 7"></polyline></svg>`;
         askNowBtn.href = "#ask-form";
         askNowBtn.addEventListener("click", (e) => {
             e.preventDefault();
