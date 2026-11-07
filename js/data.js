@@ -46,13 +46,13 @@ const courses = [
                 id: 1,
                 title: "المحاضرة الأولى",
                 summaryBy: "يوسف محمد محمد",
-                description: "تعريف بالمادة وأهدافها، مراجعة سريعة لقواعد البيانات 1 والمتطلبات الأساسية.",
-                video:"https://youtu.be/tzqadCOoVhk?si=UimqJV6VNZBPRj_q",
-                lectureFile: "assets/files/lecture-01.pdf",
-                summaryFile: "assets/files/lecture-01-summary.pdf",
-                sectionUrl: "assets/files/lecture-01-section.pdf",
+                description: "محاضرة تمهيدية للتعرّف على مفهوم قواعد البيانات (Databases)، وأهميتها في تخزين البيانات وتنظيمها وإدارتها، مع توضيح الفرق بين قاعدة البيانات (Database) ونظام إدارة قواعد البيانات (DBMS)، والتعرّف على أشهر أنظمة إدارتها مثل Oracle، وفهم آلية عملها والتعامل معها عمليًا، بدايةً من إنشاء قواعد البيانات والجداول وصولًا إلى تخزين البيانات واسترجاعها وإدارتها باستخدام SQL.",
+                video:"https://youtu.be/LnhemlEYF1o",
+                lectureFile: "https://docs.google.com/presentation/d/14x9HlbbnCsGlk8ThwJDuTK7i3kNsxqZ_/edit?usp=sharing&ouid=102679335257625211672&rtpof=true&sd=true",
+                summaryFile: "https://drive.google.com/file/d/1nWlKtKQIXhAh_j7oVJ3Q8qvdU6-6tvvq/view?usp=drive_link",
+                sectionUrl: "https://drive.google.com/file/d/1QT7DwqxtLlUCHXtRLDZ6m6_n-lBv6g1k/view?usp=drive_link",
                 bookUrl: "assets/files/database/bookdatebase.pdf",
-                quizUrl: "9"
+                quizUrl: ""
             },
         ]
     },
@@ -75,11 +75,11 @@ const courses = [
                 summaryBy: "صباح عامر",
                 description: "في المحاضرة دي هنتعرف على أساسيات الاحتمالات ومفاهيمها الرئيسية، وإزاي نحسب احتمال حدوث الأحداث المختلفة، مع فهم الفرق بين الأحداث المستقلة والتابعة، والتطبيق على أمثلة عملية تساعدنا نستخدم الاحتمالات في تحليل البيانات واتخاذ القرارات.",
                 video:"https://youtu.be/KvaBFDr3UiA?si=GNrFpF_xE96yuf5t",
-                lectureFile: "المحاضرة الاولة احصاء وحزم بحوث العمليات.pdf",
-                summaryFile: "ملخص المحاضرة الاولى احصاء.pdf",
-                sectionUrl: "سكشن 1 احصاء وحزم بحوث العمليات.pdf",
-                bookUrl: "كتاب ( احصاء وحزم البحوث ).pdf",
-                quizUrl: "9"
+                lectureFile: "https://drive.google.com/file/d/11hN0x3BegIs-vBwCJozM8oSfAELCvAkk/view?usp=sharing",
+                summaryFile: "https://drive.google.com/file/d/1MI3EIEVuv0DPTF8gObC49oXv55gD8hZw/view?usp=drive_link",
+                sectionUrl: "https://drive.google.com/file/d/1kntfXqG3AJBke0Fw5BUygy5h1r6zc1x5/view?usp=drive_link",
+                bookUrl: "",
+                quizUrl: ""
             },     
         ]
     },
@@ -99,13 +99,13 @@ const courses = [
             {
                 id: 1,
                 title: "المحاضرة الأولى",
-                summaryBy: "",
-                description: "",
+                summaryBy: "يوسف محمد محمد",
+                description: "تتناول هذه المحاضرة المفاهيم الأساسية للإدارة وأهميتها في المؤسسات والمنظمات، وتوضح الوظائف الرئيسية للإدارة، وهي التخطيط والتنظيم والتوجيه والرقابة، وكيفية استخدام الموارد المتاحة لتحقيق أهداف المؤسسة بكفاءة وفاعلية. كما تتعرف على المستويات الإدارية المختلفة، وأدوار المديرين، والمهارات الأساسية اللازمة لنجاح العملية الإدارية.",
                 video:"",
-                lectureFile: "",
-                summaryFile: "",
+                lectureFile: "https://docs.google.com/presentation/d/1z9DID-UE55c0Z1vmgFrzDg0bWltNcOgx/edit?usp=drive_link&ouid=102679335257625211672&rtpof=true&sd=true",
+                summaryFile: "https://drive.google.com/file/d/1ttxsEisB583MI_rHUY3-rQ5d1C_h0AHX/view?usp=sharing",
                 sectionUrl: "",
-                bookUrl: "",
+                bookUrl: "https://drive.google.com/file/d/1aCvz3d0_beN7i2RH9EGsEwkGXF9wwCnT/view?usp=drive_link",
                 quizUrl: ""
             }
         ]
@@ -153,11 +153,11 @@ const courses = [
             {
                 id: 1,
                 title: "المحاضرة الأولى",
-                summaryBy: "",
-                description: "",
+                summaryBy: "رضوى ماهر",
+                description: "مقدمة في محاسبة الضرائب، تتناول مفهوم الضرائب وأهميتها، وأنواعها، وأهداف النظام الضريبي، ودور المحاسبة الضريبية في تحديد الالتزامات الضريبية للأفراد والمنشآت.",
                 video:"",
-                lectureFile: "",
-                summaryFile: "",
+                lectureFile: "https://drive.google.com/file/d/1TvE7fGYuIG4fU-bcXPh_Yf7I9aPQystE/view?usp=sharing",
+                summaryFile: "https://drive.google.com/file/d/1CVtLKVmgzM9RmqdmOre8fOgRv0ZeFO6r/view?usp=sharing",
                 sectionUrl: "",
                 bookUrl: "",
                 quizUrl: ""
@@ -180,13 +180,13 @@ const courses = [
             {
                 id: 1,
                 title: "المحاضرة الأولى",
-                summaryBy: "",
-                description: "",
+                summaryBy: "رحمه على",
+                description: "مقدمة في محاسبة التكاليف، تتناول مفهوم محاسبة التكاليف وأهميتها وأهدافها، والتعرف على أنواع التكاليف وطرق تصنيفها، ودورها في الرقابة على المصروفات وتحديد تكلفة المنتجات ودعم اتخاذ القرارات الإدارية.",
                 video:"",
-                lectureFile: "",
-                summaryFile: "",
-                sectionUrl: "",
-                bookUrl: "",
+                lectureFile: "https://drive.google.com/file/d/1X1ayA8H1yxKEH3geLM1P40MRTBMLdhti/view?usp=drive_link",
+                summaryFile: "https://drive.google.com/file/d/1SKQIBdjozlu_p0i7pl3KU9bC1muO5gfT/view?usp=drive_link",
+                sectionUrl: "https://drive.google.com/file/d/1Aof3R7Wzh-38J8TSvxetTKhsvD1CQA7i/view?usp=drive_link",
+                bookUrl: "https://drive.google.com/file/d/1vlx1E9jZgeEo8WBcanv87Btp3Cmfvjc5/view?usp=drive_link",
                 quizUrl: ""
             }
         ]
